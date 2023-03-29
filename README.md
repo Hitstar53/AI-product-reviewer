@@ -12,3 +12,6 @@ This project is a product review analysis tool that uses NLP to analyze the sent
 ## Components
 - Chrome extension (entry point)
 - Main Website page with user login and signup
+- REST API for the NLP model
+- NLP model
+- Database
