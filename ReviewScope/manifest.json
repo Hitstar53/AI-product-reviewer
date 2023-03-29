@@ -1,0 +1,40 @@
+{
+    "name": "ReviewScope",
+    "version": "0.1",
+    "manifest_version": 2,
+    "description": "ReviewScope is a tool for analyzing product reviews.",
+    "icons": {
+        "16": "logo.jpg",
+        "48": "logo.jpg",
+        "128": "logo.jpg"
+    },
+    "browser_action": {
+        "default_icon": "logo.jpg",
+        "default_popup": "popup.html"
+    },
+    "permissions": [
+        "tabs",
+        "storage",
+        "http://*/*",
+        "https://*/*",
+        "webRequest",
+        "webRequestBlocking",
+        "cookies",
+        "activeTab",
+        "contextMenus",
+        "notifications",
+        "unlimitedStorage",
+        "identity",
+        "identity.email",
+        "identity.read",
+        "identity.write",
+        "identity.launch.webauthn",
+        "identity.launch.webauthn",
+        "identity.manage.accounts",
+        "identity.manage.accounts"
+    ],
+    "background": {
+        "scripts": ["background.js"],
+        "persistent": false
+    }
+}
