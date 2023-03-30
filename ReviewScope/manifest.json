@@ -1,6 +1,6 @@
 {
     "name": "ReviewScope",
-    "version": "1.5.3",
+    "version": "2.1.1",
     "manifest_version": 3,
     "description": "ReviewScope is a tool for analyzing product reviews.",
     "icons": {
