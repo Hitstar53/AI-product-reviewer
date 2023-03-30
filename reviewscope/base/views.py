@@ -24,8 +24,10 @@ def polarity_scores_roberta(example):
 
 def api_call(link):
     api_client = ApiClient(api_key='Z29vZ2xlLW9hdXRoMnwxMTU3MTI4ODgzMjY3NDgyNTQ2MzF8YzBlN2I4YTE3NQ')
-    results = api_client.amazon_reviews(link, limit=10)
-    print(results)
+    results = api_client.amazon_reviews(link, limit=1)
+    review = results[0][0]['body']
+    rating = results[0][0]['rating']
+    return review
 
 # Create your views here.
 def home(request):
@@ -34,7 +36,8 @@ def home(request):
 def search(request):
     if request.method == 'POST':
         text = request.POST['query']
-        api_call(text)
-        #op = polarity_scores_roberta(text)
-        return render(request, 'base/search.html')
+        text = api_call(text)
+        print(text)
+        op = polarity_scores_roberta(text)
+        return render(request, 'base/search.html', {'out': op})
     return render(request, 'base/search.html')
