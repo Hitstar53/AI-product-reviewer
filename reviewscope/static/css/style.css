@@ -1,0 +1,123 @@
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Open Sans', sans-serif;
+}
+
+p {
+  font-family: 'Muli', sans-serif;
+}
+
+h1 {
+  font-family: 'Muli', sans-serif;
+
+}
+
+.container {
+  width: 50%;
+  font-size: 1rem;
+  margin: 10% auto;
+  text-align: center;
+}
+
+.output-wrap {
+  margin: 0 auto;
+  text-align: center;
+}
+
+#animated input[type=text] {
+  width: 300px;
+  box-sizing: border-box;
+  border: 1px solid #c8c8c8;
+  border-radius: 4px;
+  font-size: 16px;
+  background-color: white;
+  padding: 12px 20px 12px 40px;
+  -webkit-transition: width 0.5s ease-out;
+  transition: width 0.5s ease-out;
+}
+
+#animated input[type=text]:focus {
+  width: 500px;
+}
+
+#animated i {
+  position: relative;
+  left: 30px;
+}
+
+
+
+.search-txt-input {
+  padding: 12px 20px;
+  font-size: 14px;
+  border: 1px solid #c8c8c8;
+  border-right: 0px;
+  border-top-left-radius: 4px 4px;
+  border-bottom-left-radius: 4px 4px;
+  width: 200px;
+}
+
+.search-button {
+  padding: 12px 15px;
+  font-size: 16px;
+  outline: none;
+  text-align: center;
+  text-decoration: none;
+  color: #ffffff;
+  border: solid 1px #c8c8c8;
+  border-right: 0px;
+  background: #f45c03;
+  border-top-right-radius: 4px 4px;
+  border-bottom-right-radius: 4px 4px;
+  position: relative;
+  left: -5px;
+}
+
+.search-button:hover {
+  text-decoration: none;
+  background: #f67c35;
+}
+
+.search-button::-moz-focus-inner {
+  border: 0;
+}
+
+#animated-2 .search-txt-input {
+  width: 200px;
+  -webkit-transition: width 0.5s ease-out;
+  transition: width 0.5s ease-out;
+}
+
+#animated-2 input[type=text]:focus {
+  width: 500px;
+}
+
+
+button[type='submit'] {
+  background-color: #E51284;
+  color: #fff;
+  cursor: pointer;
+}
+
+button[type='submit']:hover {
+  background-color: #ea419c;
+  color: #fff;
+  cursor: pointer;
+}
+
+
+#standard-3 .search-txt-input {
+  width: 200px;
+  -webkit-transition: width 0.5s ease-out;
+  transition: width 0.5s ease-out;
+}
+
+#standard-3 input[type=text]:focus {
+  width: 500px;
+}
