@@ -2,7 +2,8 @@ from django.shortcuts import render
 from transformers import AutoTokenizer
 from transformers import AutoModelForSequenceClassification
 from scipy.special import softmax
-# Create your views here.
+
+#setup model (roberta)
 MODEL = f"cardiffnlp/twitter-roberta-base-sentiment"
 tokenizer = AutoTokenizer.from_pretrained(MODEL)
 model = AutoModelForSequenceClassification.from_pretrained(MODEL)
@@ -17,8 +18,9 @@ def polarity_scores_roberta(example):
         'roberta_pos' : scores[2]
     }
     print(scores_dict)
-    
     return scores_dict
+
+# Create your views here.
 def home(request):
     return render(request, 'base/home.html')
 
