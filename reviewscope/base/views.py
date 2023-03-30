@@ -2,6 +2,8 @@ from django.shortcuts import render
 from transformers import AutoTokenizer
 from transformers import AutoModelForSequenceClassification
 from scipy.special import softmax
+from outscraper import ApiClient
+import requests
 
 #setup model (roberta)
 MODEL = f"cardiffnlp/twitter-roberta-base-sentiment"
@@ -20,6 +22,11 @@ def polarity_scores_roberta(example):
     print(scores_dict)
     return scores_dict
 
+def api_call(link):
+    api_client = ApiClient(api_key='Z29vZ2xlLW9hdXRoMnwxMTU3MTI4ODgzMjY3NDgyNTQ2MzF8YzBlN2I4YTE3NQ')
+    results = api_client.amazon_reviews(link, limit=10)
+    print(results)
+
 # Create your views here.
 def home(request):
     return render(request, 'base/home.html')
@@ -27,6 +34,7 @@ def home(request):
 def search(request):
     if request.method == 'POST':
         text = request.POST['query']
-        op=polarity_scores_roberta(text)
-        return render(request, 'base/search.html', {'out': op})
+        api_call(text)
+        #op = polarity_scores_roberta(text)
+        return render(request, 'base/search.html')
     return render(request, 'base/search.html')
