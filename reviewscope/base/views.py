@@ -4,6 +4,8 @@ from transformers import AutoTokenizer
 from transformers import AutoModelForSequenceClassification
 from scipy.special import softmax
 from outscraper import ApiClient
+from joblib import load
+from sklearn.linear_model import LinearRegression
 import requests
 
 #setup model (roberta)
@@ -17,6 +19,9 @@ def polarity_scores_roberta_list(review):
     scores = softmax(scores)
     scores_list = [scores[0], scores[1], scores[2]]
     return scores_list
+
+def calc_rating():
+    pass
 
 def api_call(link):
     api_client = ApiClient(api_key='Z29vZ2xlLW9hdXRoMnwxMTU3MTI4ODgzMjY3NDgyNTQ2MzF8YzBlN2I4YTE3NQ')
@@ -50,7 +55,7 @@ def search(request):
         rev_rate=0
         star = 0
         for index, row in df_results.iterrows():
-            star += 5*row['roberta_pos'] + 2.5*row['roberta_neu'] + 0*row['roberta_neg']
+            #star += lr_model.predict([row['roberta_neg'],row['roberta_neu'],row['roberta_pos']])
             rev_rate+=row['Score']
         star/=10
         rev_rate/=10
