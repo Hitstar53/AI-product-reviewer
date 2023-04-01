@@ -38,10 +38,17 @@ h1 {
   text-align: center;
 }
 
+.rating-result {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #000;
+  margin: 0 auto;
+  text-align: center;
+}
+
 #animated input[type=text] {
   width: 300px;
   box-sizing: border-box;
-  border: 1px solid #c8c8c8;
   border-radius: 4px;
   font-size: 16px;
   background-color: white;
@@ -51,7 +58,7 @@ h1 {
 }
 
 #animated input[type=text]:focus {
-  width: 500px;
+  width: 600px;
 }
 
 #animated i {
@@ -59,15 +66,10 @@ h1 {
   left: 30px;
 }
 
-
-
 .search-txt-input {
   padding: 12px 20px;
   font-size: 14px;
-  border: 1px solid #c8c8c8;
-  border-right: 0px;
-  border-top-left-radius: 4px 4px;
-  border-bottom-left-radius: 4px 4px;
+  border: 1px solid #000;
   width: 200px;
 }
 
@@ -78,18 +80,17 @@ h1 {
   text-align: center;
   text-decoration: none;
   color: #ffffff;
-  border: solid 1px #c8c8c8;
-  border-right: 0px;
-  background: #f45c03;
-  border-top-right-radius: 4px 4px;
-  border-bottom-right-radius: 4px 4px;
+  border: 0;
+  background: #000;
   position: relative;
-  left: -5px;
+  left: -7px;
+  top: 1px;
+  cursor: pointer;
 }
 
 .search-button:hover {
   text-decoration: none;
-  background: #f67c35;
+  background: #006400;
 }
 
 .search-button::-moz-focus-inner {
@@ -104,19 +105,6 @@ h1 {
 
 #animated-2 input[type=text]:focus {
   width: 500px;
-}
-
-
-button[type='submit'] {
-  background-color: #E51284;
-  color: #fff;
-  cursor: pointer;
-}
-
-button[type='submit']:hover {
-  background-color: #ea419c;
-  color: #fff;
-  cursor: pointer;
 }
 
 

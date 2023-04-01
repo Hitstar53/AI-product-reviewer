@@ -24,7 +24,15 @@
   <div class="output-wrap">
     {% block output %}
     <p class="model-output">
-      {{ out }} 
+      {% if rev and star %}
+      <div class="rating-result">
+        Review Rating: {{ rev }}
+        <br>
+        Our Rating: {{ star }}
+      </div>
+      {% else %}
+      <span class="model-name">Enter product link for rating</span>
+      {% endif %}
     </p>
     {% endblock %}
   </div>
