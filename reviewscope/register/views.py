@@ -37,3 +37,20 @@ def register_user(request):
             return render(request, 'authenticate/register.html')
     else:
         return render(request, 'authenticate/register.html')
+    
+def logout_user(request):
+    logout(request)
+    return redirect('login')
+
+def forgot_password(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        if User.objects.filter(email=email).exists():
+            user = User.objects.get(email=email)
+            user.set_password(password)
+            return redirect('login')
+        else:
+            messages.info(request, 'Email does not exist')
+            return render(request, 'authenticate/forgot.html')
+    return render(request, 'authenticate/forgot.html')

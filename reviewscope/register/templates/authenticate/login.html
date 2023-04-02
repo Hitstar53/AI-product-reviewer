@@ -1,17 +1,22 @@
-<!DOCTYPE html>
+{% extends 'base.html' %}
 {% load static %}
-<html lang="en" dir="ltr">
-<head>
-    <meta charset="utf-8" />
-    <link rel="stylesheet" href="{% static 'css/login.css' %}" />
-    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
-</head>
-<body>
+
+{% block title %}
+<title>ReviewScope | login</title>
+{% endblock title %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
+
+{% block content %}
     <div class="center">
-        <div class="container">
-            <label for="show" class="close-btn fas fa-times" title="close"></label>
-            <div class="text">Login Form</div>
-            <form action="#">
+        <div class="container-login">
+            <div class="text">
+                <i class="fa-regular fa-circle-user"></i> Login
+            </div>
+            <form action="" method="POST">
+                {% csrf_token %}
                 <div class="data">
                     <label>Email</label>
                     <input type="text" required />
@@ -21,18 +26,15 @@
                     <input type="password" required />
                 </div>
                 <div class="forgot-pass">
-                    <a href="#">Forgot Password?</a>
+                    <a href="{% url 'forgot' %}">Forgot Password?</a>
                 </div>
-                <div class="btn">
-                    <div class="inner"></div>
-                    <button type="submit">login</button>
-                </div>
+                <button type="submit">
+                    <i class="fa-solid fa-arrow-right-to-bracket"></i> login
+                </button>
                 <div class="signup-link">
-                    Not a member? <a href="#">Signup now</a>
+                    Not a User? <a href="{% url 'register' %}">Signup now</a>
                 </div>
             </form>
         </div>
     </div>
-</body>
-
-</html>
+{% endblock content %}

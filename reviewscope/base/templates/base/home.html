@@ -1,1 +1,122 @@
 {% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}
+<title>ReviewScope | Home</title>
+{% endblock title %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock css %}
+
+{% block content %}
+<section id="learn" class="p-5">
+    <div class="container">
+        <div class="row align-items-center justify-content-between">
+            <div class="col-md p-5">
+                <h2 class="fw-bold">AI Product Reviewer</h2>
+                <p class="lead">
+                    ReviewScope extracts, analyzes, and summarizes online reviews to help users make informed decisions with ease.
+                </p>
+                <p class="lead">
+                    Our product provides a comprehensive view of customer sentiment, benefiting consumers and businesses.
+                </p>
+                <p class="lead">
+                    Try it out now!
+                </p>
+                <!-- a simple bootstrap search bar -->
+                <form class="d-flex mt-3">
+                    <input id="search-bar" class="form-control me-2" type="search" placeholder="Enter Product URL" aria-label="Search">
+                    <button class="btn btn-dark text-light" type="submit">
+                        <i class="fa-regular fa-paper-plane"></i>
+                    </button>
+                </form>
+            </div>
+            <div class="col-md">
+                <img class="img-fluid" src="{% static 'assets/hero.jpg' %}" alt="">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Reviews section -->
+<section class="reviews pt-5">
+    <div class="main-container">
+        <div class="heading">
+            <h1>User Reviews</h1>
+        </div>
+        <div class="cards">
+            <div class="card card1">
+                <div class="stars">
+                    <ul>
+                        <li><i class="fa-solid fa-star"></i></li>
+                        <li><i class="fa-solid fa-star"></i></li>
+                        <li><i class="fa-solid fa-star"></i></li>
+                        <li><i class="fa-solid fa-star"></i></li>
+                        <li><i class="fa-solid fa-star"></i></li>
+                    </ul>
+                </div>
+                <p class="close"><i class="fa-solid fa-xmark"></i></p>
+                <p class="desc">Ut enim ad minim veniam. Lorem ipsum dolor sit amet consectetur adipisicing.</p>
+                <p class="read-more">
+                    <a class="readMore" href="#">Read More <i class="fas fa-arrow-right"></i></a>
+                </p>
+            </div>
+    
+            <div class="card card2">
+                <div>
+                    <ul>
+                        <li><i class="fa-solid fa-star"></i></li>
+                        <li><i class="fa-solid fa-star"></i></li>
+                        <li><i class="fa-solid fa-star"></i></li>
+                        <li><i class="fa-solid fa-star"></i></li>
+                        <li><i class="fa-solid fa-star"></i></li>
+                    </ul>
+                </div>
+                <p class="close"><i class="fa-solid fa-xmark"></i></p>
+                <p class="desc">Ut enim ad minim veniam. Lorem ipsum dolor sit amet consectetur adipisicing.</p>
+                <p class="read-more">
+                    <a class="readMore" href="#">Read More <i class="fas fa-arrow-right"></i></a>
+                </p>
+            </div>
+    
+            <div class="card card3">
+                <div>
+                    <ul>
+                        <li><i class="fa-solid fa-star"></i></li>
+                        <li><i class="fa-solid fa-star"></i></li>
+                        <li><i class="fa-solid fa-star"></i></li>
+                        <li><i class="fa-solid fa-star"></i></li>
+                        <li><i class="fa-solid fa-star"></i></li>
+                    </ul>
+                </div>
+                <p class="close"><i class="fa-solid fa-xmark"></i></p>
+                <p class="desc">Ut enim ad minim veniam. Lorem ipsum dolor sit amet consectetur adipisicing.</p>
+                <p class="read-more">
+                    <a class="readMore" href="#">Read More <i class="fas fa-arrow-right"></i></a>
+                </p>
+            </div>
+    
+            <div class="card card4">
+                <div>
+                    <ul>
+                        <li><i class="fa-solid fa-star"></i></li>
+                        <li><i class="fa-solid fa-star"></i></li>
+                        <li><i class="fa-solid fa-star"></i></li>
+                        <li><i class="fa-solid fa-star"></i></li>
+                        <li><i class="fa-solid fa-star"></i></li>
+                    </ul>
+                </div>
+                <p class="close"><i class="fa-solid fa-xmark"></i></p>
+                <p class="desc">Ut enim ad minim veniam. Lorem ipsum dolor sit amet consectetur adipisicing.</p>
+                <p class="read-more">
+                    <a class="readMore" href="#">Read More <i class="fas fa-arrow-right"></i></a>
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+
