@@ -32,14 +32,34 @@ def api_call(link):
     ratings = []
     for i in range(len(result[0])):
         reviews.append(result[0][i]['body'])
-
     for i in range(len(result[0])):
         ratings.append(result[0][i]['rating'])
-
     return reviews,ratings
 
 # Create your views here.
 def home(request):
+    if request.method == 'POST':
+        text = request.POST['query']
+        reviews,ratings = api_call(text)
+        rev_len = len(reviews)
+        res = []
+        op = []
+        columns = ['Id', 'roberta_neg', 'roberta_neu', 'roberta_pos','Score']
+        for i in range(rev_len):
+            res.append([i]+polarity_scores_roberta_list(reviews[i])+[ratings[i]])
+        df_results = pd.DataFrame(res, columns=columns)
+        rev_rate=0
+        star = 0
+        print(rev_len)
+        for index, row in df_results.iterrows():
+            star += lr_model.predict([[row['roberta_neg'],row['roberta_neu'],row['roberta_pos']]])
+            rev_rate+=row['Score']
+        star/=rev_len
+        rev_rate/=rev_len
+        avg_rate = (star[0]+rev_rate)/2
+        avg_rate = round(avg_rate, 2)
+        iter = [1,2,3,4,5]
+        return render(request, 'base/home.html', {'avg' : avg_rate, 'iter' : iter, 'star' : star[0], 'rev' : rev_rate})
     return render(request, 'base/home.html')
 
 def search(request):

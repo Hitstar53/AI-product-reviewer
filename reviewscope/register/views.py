@@ -8,7 +8,7 @@ def login_user(request):
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
-        user = authenticate(request, email=email, password=password)
+        user = authenticate(request, username=email, password=password)
         if user is not None:
             login(request, user)
             return redirect('home')
@@ -25,13 +25,13 @@ def register_user(request):
         password2 = request.POST.get('password2')
         if password == password2:
             # check if username already exists
-            if User.objects.filter(email=email).exists():
+            if User.objects.filter(username=email).exists():
                 messages.info(request, 'Email already exists')
                 return render(request, 'authenticate/register.html')
             else:
-                user = User.objects.create_user(email=email, password=password)
+                user = User.objects.create_user(username=email, password=password)
                 user.save()
-                return redirect('login')
+                return redirect('home')
         else:
             messages.info(request, 'Password not matching')
             return render(request, 'authenticate/register.html')
@@ -46,8 +46,8 @@ def forgot_password(request):
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
-        if User.objects.filter(email=email).exists():
-            user = User.objects.get(email=email)
+        if User.objects.filter(username=email).exists():
+            user = User.objects.get(username=email)
             user.set_password(password)
             return redirect('login')
         else:

@@ -10,11 +10,7 @@
     margin-top: 8rem;
 }
 
-.main-container {
-    padding: 30px;
-}
-
-.main-container .heading {
+.heading {
     font-size: 2.5rem;
     margin-bottom: 2rem;
     text-align: center;
@@ -26,7 +22,39 @@
     justify-content: space-between;
 }
 
-.card {
+.mr-card {
+    border-radius: 10px;
+    transition: all 0.3s ease-in-out;
+    grid-template-rows: 20px 50px 1fr 50px;
+    box-shadow: 0px 6px 10px rgba(74, 70, 74, 0.414);
+}
+
+.mr-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.4);
+}
+
+.mr-card .stars {
+    position: relative;
+    text-decoration: none;
+    color: rgba(235, 139, 139, 0.9);
+}
+
+.mr-card .stars ul li:nth-child(1) {
+    margin: auto 0;
+}
+
+#mr-btn {
+    background-color: #171941;
+}
+
+#mr-btn:hover {
+    border: 2px solid #171941;
+    color: #171941;
+    background-color: #fff;
+}
+
+.review-card {
     margin: 20px;
     padding: 20px;
     width: 500px;
@@ -38,30 +66,34 @@
     box-shadow: 0px 6px 10px rgba(74, 70, 74, 0.414);
 }
 
-.card:hover {
+.review-card:hover {
     transform: scale(1.01);
     box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.4);
 }
 
 .readMore,
 .close,
-.card div {
+.review-card div {
     cursor: pointer;
     position: relative;
     text-decoration: none;
     color: rgba(255, 255, 255, 0.9);
 }
 
-.card div ul {
+.stars ul {
     display: flex;
     padding: 0;
-    
     list-style: none;
 }
 
-.card div ul li {
-    margin: 0 0.3rem;
+.stars ul li {
+    margin: auto 0.3rem;
     font-size: 1.1rem;
+}
+
+.mr-card .stars ul li:last-child {
+    margin-left: 1.4rem;
+    font-size: 1.5rem;
 }
 
 .desc {
@@ -92,7 +124,7 @@
     justify-self: end;
 }
 
-.card div {
+.review-card div {
     grid-row: 2/3;
     font-size: 30px;
 }
