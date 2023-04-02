@@ -5,10 +5,14 @@ from transformers import AutoModelForSequenceClassification
 from scipy.special import softmax
 from outscraper import ApiClient
 from joblib import load
+import warnings
 from sklearn.linear_model import LinearRegression
 import requests
 
 #setup model (roberta)
+warnings.filterwarnings("ignore")
+lr_model=load('./savedModels/rating_predictor_updated.joblib')
+
 MODEL = f"cardiffnlp/twitter-roberta-base-sentiment"
 tokenizer = AutoTokenizer.from_pretrained(MODEL)
 model = AutoModelForSequenceClassification.from_pretrained(MODEL)
@@ -20,19 +24,16 @@ def polarity_scores_roberta_list(review):
     scores_list = [scores[0], scores[1], scores[2]]
     return scores_list
 
-def calc_rating():
-    pass
 
 def api_call(link):
     api_client = ApiClient(api_key='Z29vZ2xlLW9hdXRoMnwxMTU3MTI4ODgzMjY3NDgyNTQ2MzF8YzBlN2I4YTE3NQ')
-    result = api_client.amazon_reviews(link, limit=10)
-    # make a generator to get the reviews from results[0][i]['body']
+    result = api_client.amazon_reviews(link, limit=15)
     reviews = []
     ratings = []
-    for i in range(10):
+    for i in range(len(result[0])):
         reviews.append(result[0][i]['body'])
 
-    for i in range(10):
+    for i in range(len(result[0])):
         ratings.append(result[0][i]['rating'])
 
     return reviews,ratings
@@ -45,19 +46,20 @@ def search(request):
     if request.method == 'POST':
         text = request.POST['query']
         reviews,ratings = api_call(text)
-        print(len(reviews))
+        rev_len = len(reviews)
         res = []
         op = []
         columns = ['Id', 'roberta_neg', 'roberta_neu', 'roberta_pos','Score']
-        for i in range(10):
+        for i in range(rev_len):
             res.append([i]+polarity_scores_roberta_list(reviews[i])+[ratings[i]])
         df_results = pd.DataFrame(res, columns=columns)
         rev_rate=0
         star = 0
+        print(rev_len)
         for index, row in df_results.iterrows():
-            #star += lr_model.predict([row['roberta_neg'],row['roberta_neu'],row['roberta_pos']])
+            star += lr_model.predict([[row['roberta_neg'],row['roberta_neu'],row['roberta_pos']]])
             rev_rate+=row['Score']
-        star/=10
-        rev_rate/=10
-        return render(request, 'base/search.html', {'star': star, 'rev' : rev_rate})
+        star/=rev_len
+        rev_rate/=rev_len
+        return render(request, 'base/search.html', {'star': star[0], 'rev' : rev_rate})
     return render(request, 'base/search.html')
