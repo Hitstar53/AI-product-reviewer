@@ -27,20 +27,23 @@ def polarity_scores_roberta_list(review):
 
 def api_call(link):
     api_client = ApiClient(api_key='Z29vZ2xlLW9hdXRoMnwxMTU3MTI4ODgzMjY3NDgyNTQ2MzF8YzBlN2I4YTE3NQ')
-    result = api_client.amazon_reviews(link, limit=15)
+    result = api_client.amazon_reviews(link, limit=10)
     reviews = []
     ratings = []
+    p_name = result[0][1]['product_name']
     for i in range(len(result[0])):
         reviews.append(result[0][i]['body'])
     for i in range(len(result[0])):
         ratings.append(result[0][i]['rating'])
-    return reviews,ratings
+    return reviews,ratings,p_name
 
 # Create your views here.
 def home(request):
     if request.method == 'POST':
         text = request.POST['query']
-        reviews,ratings = api_call(text)
+        if text == '':
+            return render(request, 'base/home.html')
+        reviews,ratings,p_name = api_call(text)
         rev_len = len(reviews)
         res = []
         op = []
@@ -59,7 +62,7 @@ def home(request):
         avg_rate = (star[0]+rev_rate)/2
         avg_rate = round(avg_rate, 2)
         iter = [1,2,3,4,5]
-        return render(request, 'base/home.html', {'avg' : avg_rate, 'iter' : iter, 'star' : star[0], 'rev' : rev_rate})
+        return render(request, 'base/home.html', {'avg' : avg_rate, 'iter' : iter, 'star' : star[0], 'rev' : rev_rate, 'p_name' : p_name})
     return render(request, 'base/home.html')
 
 def search(request):

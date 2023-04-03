@@ -30,7 +30,7 @@
                 <form class="d-flex mt-3" method="POST">
                     {% csrf_token %}
                     <input id="search-bar" class="form-control me-2" type="search" placeholder="Enter Product URL" name="query" aria-label="Search">
-                    <button class="btn btn-dark text-light" type="submit">
+                    <button class="btn btn-dark text-light searchbtn" type="submit">
                         <i class="fa-regular fa-paper-plane"></i>
                     </button>
                 </form>
@@ -56,7 +56,7 @@
                 </div>
                 <div class="col-md-8">
                     <div class="card-body">
-                        <h3 class="card-title fw-bold">Product Name</h3>
+                        <h3 class="card-title fw-bold">{{ p_name }}</h3>
                         <p class="card-text">
                             <div class="stars">
                                 <ul>
@@ -77,7 +77,7 @@
                         <p class="card-text">
                             Lorem ipsum dolor sit amet consectetur, adipisicing elit. Optio sapiente natus fuga obcaecati ex, possimus, deleniti sint ut dolores unde exercitationem voluptates. Ducimus officia delectus beatae aliquam earum dicta, quo tenetur quisquam debitis sequi illum eos fuga nesciunt non ea recusandae magni excepturi quasi fugit placeat, quibusdam a quia laboriosam!
                         </p>
-                        <a id="mr-btn" class="btn btn-primary" href="#" role="button">
+                        <a id="mr-btn" class="btn btn-primary" href="{% url 'login' %}" role="button">
                             Read More <i class="fas fa-arrow-right"></i>
                         </a>
                         <p class="card-text mt-3"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
@@ -87,6 +87,15 @@
         </div>
     </div>
 </section>
+{% else %}
+<div class="spinner">
+    <div class="rect1"></div>
+    <div class="rect2"></div>
+    <div class="rect3"></div>
+    <div class="rect4"></div>
+    <div class="rect5"></div>
+    <!-- <p class="spinner-text">This may take a while!</p> -->
+</div>
 {% endif %}
 
 <!-- User Reviews section -->
@@ -166,4 +175,6 @@
 
 {% endblock content %}
 
-
+{% block scripts %}
+<script src="{% static 'js/home.js' %}"></script>
+{% endblock %}
