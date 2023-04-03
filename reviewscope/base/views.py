@@ -7,7 +7,9 @@ from outscraper import ApiClient
 from joblib import load
 import warnings
 from sklearn.linear_model import LinearRegression
+import cleantext
 import requests
+from bs4 import BeautifulSoup
 
 #setup model (roberta)
 warnings.filterwarnings("ignore")
@@ -36,20 +38,55 @@ def api_call(link):
     for i in range(len(result[0])):
         ratings.append(result[0][i]['rating'])
     return reviews,ratings,p_name
+def clean(text):
+    text = cleantext.clean(text, to_ascii=True, lower=True, no_line_breaks=True, no_urls=True, no_emails=True,no_emoji=True, no_phone_numbers=True, no_numbers=False, no_digits=False, no_currency_symbols=True, no_punct=False, replace_with_url="", replace_with_email="", replace_with_phone_number="", replace_with_number="", replace_with_digit="0", replace_with_currency_symbol="")
+    return text
 
 # Create your views here.
 def home(request):
     if request.method == 'POST':
-        text = request.POST['query']
-        if text == '':
+        reviews = []
+        ratings=[]
+        p_name = 'Flipkart'
+        rev_len=1
+        url = request.POST['query']
+        if url == '':
             return render(request, 'base/home.html')
-        reviews,ratings,p_name = api_call(text)
-        rev_len = len(reviews)
+        if 'amazon' in url:
+            reviews,ratings,p_name = api_call(url)
+            rev_len = len(reviews)
+
+        else:
+            response = requests.get(url)
+            soup = BeautifulSoup(response.content, 'html.parser')
+            # Find the div that contains the reviews
+            try:
+                for i in range(1, 4):
+                    url=url+"&page="+str(i)
+                    response = requests.get(url)
+                    soup = BeautifulSoup(response.content, 'html.parser')
+                    # reviews_div = soup.find_all('div', {'class': '_1AtVbE'})
+                    # for d in reviews_div:
+                    reviews_div = soup.find_all('div', {'class': 't-ZTKy'})
+                    for d in reviews_div:
+                        text=d.get_text()
+                        reviews.append(text)
+                    rate_box=soup.find_all('div', {'class': '_3LWZlK _1BLPMq'})
+                    for r in rate_box:
+                        rate=r.get_text()
+                        ratings.append(int(rate))
+            except:
+                pass
         res = []
         op = []
+        rev_len = len(reviews)
         columns = ['Id', 'roberta_neg', 'roberta_neu', 'roberta_pos','Score']
-        for i in range(rev_len):
-            res.append([i]+polarity_scores_roberta_list(reviews[i])+[ratings[i]])
+        try:
+            for i in range(rev_len):
+                #reviews[i]=clean(reviews[i])
+                res.append([i]+polarity_scores_roberta_list(reviews[i])+[ratings[i]])
+        except:
+            pass
         df_results = pd.DataFrame(res, columns=columns)
         rev_rate=0
         star = 0
