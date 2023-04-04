@@ -11,7 +11,7 @@ def login_user(request):
         user = authenticate(request, username=email, password=password)
         if user is not None:
             login(request, user)
-            return redirect('home')
+            return redirect('/')
         else:
             messages.info(request, 'Username OR password is incorrect')
             return render(request, 'authenticate/login.html')
@@ -31,7 +31,8 @@ def register_user(request):
             else:
                 user = User.objects.create_user(username=email, password=password)
                 user.save()
-                return redirect('home')
+                login(request, user)
+                return redirect('/')
         else:
             messages.info(request, 'Password not matching')
             return render(request, 'authenticate/register.html')

@@ -38,6 +38,7 @@ def api_call(link):
     for i in range(len(result[0])):
         ratings.append(result[0][i]['rating'])
     return reviews,ratings,p_name
+
 def clean(text):
     text = cleantext.clean(text, to_ascii=True, lower=True, no_line_breaks=True, no_urls=True, no_emails=True,no_emoji=True, no_phone_numbers=True, no_numbers=False, no_digits=False, no_currency_symbols=True, no_punct=False, replace_with_url="", replace_with_email="", replace_with_phone_number="", replace_with_number="", replace_with_digit="0", replace_with_currency_symbol="")
     return text
@@ -55,10 +56,15 @@ def home(request):
         if 'amazon' in url:
             reviews,ratings,p_name = api_call(url)
             rev_len = len(reviews)
-
         else:
             response = requests.get(url)
             soup = BeautifulSoup(response.content, 'html.parser')
+            # get the product name from div with class _2s4DIt _1CDdy2
+            try:
+                p_name = soup.find('div', {'class': '_2s4DIt _1CDdy2'}).get_text()
+                print(p_name)
+            except:
+                pass
             # Find the div that contains the reviews
             try:
                 for i in range(1, 4):

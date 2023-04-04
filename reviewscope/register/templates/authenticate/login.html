@@ -19,11 +19,11 @@
                 {% csrf_token %}
                 <div class="data">
                     <label>Email</label>
-                    <input type="text" required />
+                    <input type="text" name="email" required />
                 </div>
                 <div class="data">
                     <label>Password</label>
-                    <input type="password" required />
+                    <input type="password" name="password" required />
                 </div>
                 <div class="forgot-pass">
                     <a href="{% url 'forgot' %}">Forgot Password?</a>
