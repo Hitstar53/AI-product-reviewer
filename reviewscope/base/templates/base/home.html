@@ -16,7 +16,7 @@
     <div class="container">
         <div class="row align-items-center justify-content-between">
             <div class="col-md p-5">
-                <h2 class="fw-bold">AI Product Reviewer</h2>
+                <h2 class="fw-bold">Review Scope</h2>
                 <p class="lead">
                     ReviewScope extracts, analyzes, and summarizes online reviews to help users make informed decisions with ease.
                 </p>
@@ -88,6 +88,7 @@
     </div>
 </section>
 {% else %}
+<!-- loader -->
 <div class="spinner">
     <div class="rect1"></div>
     <div class="rect2"></div>
@@ -97,8 +98,85 @@
 </div>
 {% endif %}
 
+<!-- accordion section -->
+<section class="faqs py-5 mt-3" id="faqs">
+    <div class="heading pricing pt-5">
+        <h1 class="fw-bold">Frequently Asked Questions</h1>
+    </div>
+    <div class="container">
+        <div class="accordion accordion-flush" id="questions">
+            <!-- item #1 -->
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#question-one">
+                        Where are you located?
+                    </button>
+                </h2>
+                <div id="question-one" class="accordion-collapse collapse" data-bs-parent="#questions">
+                    <div class="accordion-body">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore, eveniet maxime dicta eius iste aperiam
+                        beatae quasi numquam molestias est ex at possimus. Expedita eos aperiam, voluptas consectetur magni
+                        nihil sit nemo quibusdam officia quo odio dolor laboriosam molestias amet assumenda dolores.
+                        Consequuntur magnam odit explicabo vel sint praesentium dicta!
+                    </div>
+                </div>
+            </div>
+            <!-- item #2 -->
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#question-two">
+                        How much does it cost?
+                    </button>
+                </h2>
+                <div id="question-two" class="accordion-collapse collapse" data-bs-parent="#questions">
+                    <div class="accordion-body">
+                        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Pariatur animi accusantium non. Animi minus,
+                        fuga, debitis delectus in explicabo beatae dolorem earum, nihil asperiores eligendi maiores nisi porro
+                        modi excepturi.
+                    </div>
+                </div>
+            </div>
+            <!-- item #3 -->
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#question-three">
+                        What are the prerequisites?
+                    </button>
+                </h2>
+                <div id="question-three" class="accordion-collapse collapse" data-bs-parent="#questions">
+                    <div class="accordion-body">
+                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Eveniet fuga corporis beatae nisi autem quidem
+                        blanditiis dolorum voluptatum qui accusantium, assumenda hic veritatis quas consectetur quam, corrupti
+                        velit. Iste labore voluptatum ipsa quas officia dolorum sunt? Maxime, sapiente aliquid asperiores
+                        exercitationem, ipsa animi voluptatibus, minus iste quas ad delectus autem.
+                    </div>
+                </div>
+            </div>
+            <!-- item #4 -->
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#question-four">
+                        How do I sign-up for a Course?
+                    </button>
+                </h2>
+                <div id="question-four" class="accordion-collapse collapse" data-bs-parent="#questions">
+                    <div class="accordion-body">
+                        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nemo officiis voluptatem obcaecati
+                        consequuntur ducimus voluptatibus blanditiis quod aut unde soluta, similique aspernatur beatae dolore
+                        necessitatibus deleniti fugiat in ea repudiandae?
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- pricing section -->
-<section class="pricing">
+<section class="pricing py-5" id="pricing">
     <div class="heading pricing pt-5">
         <h1 class="fw-bold">Pricing</h1>
     </div>
@@ -127,7 +205,7 @@
                             <span class="icon cross"><i class="fas fa-times"></i></span>
                         </li>
                     </ul>
-                    <a href="#">Buy Now</a>
+                    <a href="{% url 'payment' %}">Buy Now</a>
                 </div>
             </div>
         </div>
@@ -155,7 +233,7 @@
                             <span class="icon cross"><i class="fas fa-times"></i></span>
                         </li>
                     </ul>
-                    <a class="middle-a" href="#">Buy Now</a>
+                    <a class="middle-a" href="{% url 'payment' %}">Buy Now</a>
                 </div>
             </div>
         </div>
@@ -183,7 +261,7 @@
                             <span class="icon cross"><i class="fas fa-times"></i></span>
                         </li>
                     </ul>
-                    <a href="#">Buy Now</a>
+                    <a href="{% url 'payment' %}">Buy Now</a>
                 </div>
             </div>
         </div>

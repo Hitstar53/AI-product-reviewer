@@ -108,6 +108,15 @@ def home(request):
         return render(request, 'base/home.html', {'avg' : avg_rate, 'iter' : iter, 'star' : star[0], 'rev' : rev_rate, 'p_name' : p_name})
     return render(request, 'base/home.html')
 
+def payment(request):
+    if request.method == 'POST':
+        name = request.form.get('name')
+        email = request.form.get('email')
+        address = request.form.get('address')+','+request.form.get('city')+','+request.form.get('zipcode')
+        amt = 690
+        pstatus = 'success'
+    return render(request, 'base/payment.html')
+
 def search(request):
     if request.method == 'POST':
         text = request.POST['query']

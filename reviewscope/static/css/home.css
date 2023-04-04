@@ -203,8 +203,27 @@
     }
 }
 
-/*Pricing Cards*/
+/* accordian section */
+.accordion {
+    box-shadow: 0px 6px 10px rgba(74, 70, 74, 0.414);
+}
 
+.accordion-item {
+    border: 1px solid #171941;
+}
+
+.accordion-item .accordion-button {
+    color: #171941;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.2s ease-in-out;
+}
+
+.accordion-item .accordion-button:hover {
+    padding-left: 2.3rem;
+}
+
+/*Pricing Cards*/
 .pricing .container {
     display: flex;
     justify-content: center;
@@ -340,4 +359,3 @@
 }
 
 /*Pricing Cards End */
-
