@@ -48,7 +48,7 @@ def home(request):
     if request.method == 'POST':
         reviews = []
         ratings=[]
-        p_name = 'Flipkart'
+        p_name = ''
         rev_len=1
         url = request.POST['query']
         if url == '':
@@ -62,6 +62,8 @@ def home(request):
             # get the product name from div with class _2s4DIt _1CDdy2
             try:
                 p_name = soup.find('div', {'class': '_2s4DIt _1CDdy2'}).get_text()
+                # remove the "reviews" from the end of the product name
+                p_name = p_name[:-7]
                 print(p_name)
             except:
                 pass

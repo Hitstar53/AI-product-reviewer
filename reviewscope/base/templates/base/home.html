@@ -30,7 +30,7 @@
                 <form class="d-flex mt-3" method="POST">
                     {% csrf_token %}
                     <input id="search-bar" class="form-control me-2" type="search" placeholder="Enter Product URL" name="query" aria-label="Search">
-                    <button class="btn btn-dark text-light searchbtn" type="submit">
+                    <button class="btn btn-dark searchbtn" onclick="scrollToLoader()" type="submit">
                         <i class="fa-regular fa-paper-plane"></i>
                     </button>
                 </form>
@@ -44,15 +44,15 @@
 
 <!-- AI review summary section -->
 {% if avg %}
-<section class="modelreview py-5">
+<section class="modelreview py-5" id="ai-review">
     <div class="container">
         <div class="heading">
             <h1 class="fw-bold">AI Generated Review</h1>
         </div>
-        <div class="mr-card card mx-auto mb-3" style="max-width:80%;">
+        <div class="mr-card card mx-auto mb-3" data-aos="zoom-in" style="max-width:80%;">
             <div class="row g-0">
                 <div class="col-md-4">
-                    <img src="{% static 'assets/hero.jpg' %}" class="img-fluid rounded-start" alt="...">
+                    <img src="{% static 'assets/ai-review.webp' %}" class="img-fluid rounded-start" alt="...">
                 </div>
                 <div class="col-md-8">
                     <div class="card-body">
@@ -77,9 +77,15 @@
                         <p class="card-text">
                             Lorem ipsum dolor sit amet consectetur, adipisicing elit. Optio sapiente natus fuga obcaecati ex, possimus, deleniti sint ut dolores unde exercitationem voluptates. Ducimus officia delectus beatae aliquam earum dicta, quo tenetur quisquam debitis sequi illum eos fuga nesciunt non ea recusandae magni excepturi quasi fugit placeat, quibusdam a quia laboriosam!
                         </p>
+                        {% if user.is_authenticated %}
+                        <a id="mr-btn" class="btn btn-primary" href="{% url 'history' %}" role="button">
+                            Read More <i class="fas fa-arrow-right"></i>
+                        </a>
+                        {% else %}
                         <a id="mr-btn" class="btn btn-primary" href="{% url 'login' %}" role="button">
                             Read More <i class="fas fa-arrow-right"></i>
                         </a>
+                        {% endif %}
                         <p class="card-text mt-3"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
                     </div>
                 </div>
@@ -89,7 +95,7 @@
 </section>
 {% else %}
 <!-- loader -->
-<div class="spinner">
+<div class="spinner" id="loader">
     <div class="rect1"></div>
     <div class="rect2"></div>
     <div class="rect3"></div>
@@ -271,5 +277,11 @@
 {% endblock content %}
 
 {% block scripts %}
+<script>
+    setTimeout(function () {
+            const loader = document.getElementById("loader");
+            loader.scrollIntoView({ behavior: "smooth" });
+        }, 3000);
+</script>
 <script src="{% static 'js/home.js' %}"></script>
 {% endblock %}

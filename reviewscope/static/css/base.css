@@ -61,8 +61,22 @@ a {
     transition: color 0.25s;
 }
 
-.nav-link:hover {
-    color: #d3d3d3;
+.nav-link:active,
+.nav-link:focus {
+    font-weight: 700;
+}
+
+.nav-link::after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 1.5px;
+    background-color: #171941;
+    transition: width 0.3s;
+}
+
+.nav-link:hover::after {
+    width: 100%;
 }
 
 .button,

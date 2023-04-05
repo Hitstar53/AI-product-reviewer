@@ -74,9 +74,11 @@
     border-radius: 25px;
     padding: 10px 30px 10px 30px;
     color: #fff;
-    transition: all 0.2s ease-in-out;
+    transition: all 0.3s ease-in-out;
 }
 
 .payments .container form #submit-btn:hover {
-    background: #000;
+    color: #171941;
+    background: #fff;
+    border: 2px solid #171941;
 }
