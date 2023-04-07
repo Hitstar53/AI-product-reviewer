@@ -16,9 +16,13 @@ body {
 
 .container-login {
     position: absolute;
-    top: 50%;
     left: 50%;
+    top: 50%;
     transform: translate(-50%, -50%);
+}
+
+.container-contact {
+    top: 55%;
 }
 
 .container-login {
@@ -63,6 +67,14 @@ form .data input {
     border: 1px solid silver;
 }
 
+form .data textarea {
+    width: 100%;
+    padding-left: 10px;
+    font-size: 14px;
+    border-radius: 8px;
+    border: 1px solid silver;
+}
+
 form .forgot-pass {
     text-align: right;
     margin-top: -8px;
@@ -89,6 +101,10 @@ form button {
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s ease;
+}
+
+.contact-btn {
+    margin-top: 5rem;
 }
 
 form button:hover {

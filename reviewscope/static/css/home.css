@@ -328,6 +328,12 @@
     font-weight: 400;
     color: #fff;
     box-shadow: 0 10px 20px #171941;
+    transition: 0.25s all;
+}
+
+.pricing .container .card-price .box .content a:hover {
+    background: #171941;
+    border: 2px solid #2db94d;
 }
 
 .pricing .container .card-price .box .content .middle-a {

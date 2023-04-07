@@ -95,8 +95,9 @@ a {
 
 .button:hover,
 .button2:hover {
-    color: #d3d3d3;
-    background-color: #171941;
+    color: #171941;
+    background-color: #fff;
+    border: 2px solid #171941;
 }
 
 header.active {
@@ -123,12 +124,14 @@ header.active .nav-link:hover {
 }
 
 header.active .button {
-    background-color: #313131;
+    background-color: #171941;
     color: #fff;
 }
 
 header.active .button:hover {
-    background-color: #151515;
+    color: #171941;
+    background-color: #fff;
+    border: 2px solid #171941;
 }
 
 /* hero section styling */

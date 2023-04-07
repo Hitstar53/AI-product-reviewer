@@ -36,7 +36,7 @@
                 </li>
                 {% endif %}
                 <li>
-                    <a href="#" class="nav-link">Contact</a>
+                    <a href="{% url 'contact' %}" class="nav-link">Contact</a>
                 </li>
             </ul>
             {% if user.is_authenticated %}

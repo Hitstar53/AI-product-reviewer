@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.core.mail import send_mail
 import pandas as pd
 from transformers import AutoTokenizer
 from transformers import AutoModelForSequenceClassification
@@ -118,6 +119,24 @@ def payment(request):
         amt = 690
         pstatus = 'success'
     return render(request, 'base/payment.html')
+
+def success(request):
+    return render(request, 'base/success.html')
+
+def contact(request):
+    if request.method == 'POST':
+        name = request.POST['name']
+        email = request.POST['email']
+        message = request.POST['message']
+        send_mail(
+            'Contact Form',
+            message,
+            email,
+            ['hatim.sawai@spit.ac.in'],
+            fail_silently=False,
+        )
+        return render(request, 'base/contact.html')
+    return render(request, 'base/contact.html')
 
 def search(request):
     if request.method == 'POST':
