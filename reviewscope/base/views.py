@@ -3,9 +3,11 @@ from django.core.mail import send_mail
 import pandas as pd
 from transformers import AutoTokenizer
 from transformers import AutoModelForSequenceClassification
+from transformers import AutoModelWithLMHead
 from scipy.special import softmax
 from outscraper import ApiClient
 from joblib import load
+import torch
 import warnings
 from sklearn.linear_model import LinearRegression
 import cleantext
@@ -16,17 +18,20 @@ from bs4 import BeautifulSoup
 warnings.filterwarnings("ignore")
 lr_model=load('./savedModels/rating_predictor_updated.joblib')
 
-MODEL = f"cardiffnlp/twitter-roberta-base-sentiment"
-tokenizer = AutoTokenizer.from_pretrained(MODEL)
-model = AutoModelForSequenceClassification.from_pretrained(MODEL)
+MODEL1 = f"cardiffnlp/twitter-roberta-base-sentiment"
+tokenizer1 = AutoTokenizer.from_pretrained(MODEL1)
+model1 = AutoModelForSequenceClassification.from_pretrained(MODEL1)
 def polarity_scores_roberta_list(review):
-    encoded_text = tokenizer(review, return_tensors='pt')
-    output = model(**encoded_text)
+    encoded_text = tokenizer1(review, return_tensors='pt')
+    output = model1(**encoded_text)
     scores = output[0][0].detach().numpy()
     scores = softmax(scores)
     scores_list = [scores[0], scores[1], scores[2]]
     return scores_list
 
+#setup model (t5)
+tokenizer2 = AutoTokenizer.from_pretrained('t5-base')
+model2 = AutoModelWithLMHead.from_pretrained('t5-base', return_dict=True)
 
 def api_call(link):
     api_client = ApiClient(api_key='Z29vZ2xlLW9hdXRoMnwxMTU3MTI4ODgzMjY3NDgyNTQ2MzF8YzBlN2I4YTE3NQ')
@@ -86,6 +91,17 @@ def home(request):
                         ratings.append(int(rate))
             except:
                 pass
+        # text summarization
+        # merge reviews
+        merged_reviews = ''
+        for i in range(len(reviews)):
+            merged_reviews += reviews[i]
+        # tokenize
+        inputs = tokenizer2.encode("summarize: " + merged_reviews, return_tensors="pt", max_length=512, truncation=True)
+        # generate summary
+        outputs = model2.generate(inputs, max_length=150, min_length=40, length_penalty=2.0, num_beams=4, early_stopping=True)
+        # decode
+        summary = tokenizer2.decode(outputs[0])
         res = []
         op = []
         rev_len = len(reviews)
@@ -108,7 +124,7 @@ def home(request):
         avg_rate = (star[0]+rev_rate)/2
         avg_rate = round(avg_rate, 2)
         iter = [1,2,3,4,5]
-        return render(request, 'base/home.html', {'avg' : avg_rate, 'iter' : iter, 'star' : star[0], 'rev' : rev_rate, 'p_name' : p_name})
+        return render(request, 'base/home.html', {'avg' : avg_rate, 'iter' : iter, 'star' : star[0], 'rev' : rev_rate, 'p_name' : p_name, 'summary': summary})
     return render(request, 'base/home.html')
 
 def payment(request):
