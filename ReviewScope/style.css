@@ -10,7 +10,7 @@ body {
 h1,
 h4 {
     text-align: center;
-    color: rgb(93, 177, 177);
+    color: #5db1b1;
     /* border-bottom: 1px solid #9DBFAF; */
 }
 
@@ -23,7 +23,7 @@ h4 {
 
 .searchTerm {
     width: 100%;
-    border: 3px solid #000;
+    border: 3px solid #171941;
     border-right: none;
     padding: 5px;
     height: 20px;
@@ -45,13 +45,13 @@ h4 {
     width: 40px;
     height: 34.5px;
     border: 1px solid #000;
-    background: black;
+    background-color: #171941;
     text-align: center;
     color: #fff;
     border-radius: 0 5px 5px 0;
     cursor: pointer;
     font-size: 20px;
-    background-image: url("imgs/search-icon.svg");
+    background-image: url("imgs/send-icon.svg");
     background-repeat: no-repeat;
     background-position: center;
     background-size: 20px 20px;
@@ -104,12 +104,13 @@ h4 {
     opacity: 0.75;
     border: 0;
     border-radius: 12px;
-    background: black;
+    background: #171941;
     cursor: pointer;
 }
 
 .rating-button:hover {
-    background: #666874;
+    border: 3px solid #171941;
+    background: #444654;
 }
 
 .rating-button a {
@@ -119,15 +120,19 @@ h4 {
 
 /* loader styling */
 .loader {
-    margin: 0 0 2em;
     height: 100px;
     width: 20%;
     text-align: center;
-    padding: 1em;
-    margin: 0 auto 1em;
+    margin: 2em auto;
     display: block;
+    color: #5db1b1;
+    font-size: 17px;
 }
 svg path,
 svg rect {
-    fill: #FF6700;
+    fill: #171941;
+}
+
+.rating-wrap svg path {
+    fill: #ffd700;
 }
