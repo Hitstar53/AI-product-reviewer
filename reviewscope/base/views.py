@@ -13,6 +13,7 @@ from sklearn.linear_model import LinearRegression
 import cleantext
 import requests
 from bs4 import BeautifulSoup
+from .models import Review
 
 #setup model (roberta)
 warnings.filterwarnings("ignore")
@@ -124,6 +125,13 @@ def home(request):
         avg_rate = (star[0]+rev_rate)/2
         avg_rate = round(avg_rate, 2)
         iter = [1,2,3,4,5]
+        # save to Review model
+        try:
+            for i in range(rev_len):
+                review = Review.objects.create(review=reviews[i], rating=ratings[i], product_name=p_name)
+                review.save()
+        except:
+            pass
         return render(request, 'base/home.html', {'avg' : avg_rate, 'iter' : iter, 'star' : star[0], 'rev' : rev_rate, 'p_name' : p_name, 'summary': summary})
     return render(request, 'base/home.html')
 
