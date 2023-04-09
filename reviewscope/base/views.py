@@ -57,12 +57,36 @@ def home(request):
         ratings=[]
         p_name = ''
         rev_len=1
+        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36'}
         url = request.POST['query']
         if url == '':
             return render(request, 'base/home.html')
         if 'amazon' in url:
             reviews,ratings,p_name = api_call(url)
             rev_len = len(reviews)
+        elif 'myntra' in url:
+            response = requests.get(url, headers=headers)
+            soup = BeautifulSoup(response.content, 'html.parser')
+            # get the product name from div with class product-details-brand
+            try:
+                p_name = soup.find('div', {'class': 'product-details-brand'}).get_text()
+                p_name += soup.find('div', {'class': 'product-details-name'}).get_text()
+                print(p_name)
+            except:
+                pass
+            # get the review from div with class user-review-reviewTextWrapper
+            try:
+                reviews_div = soup.find_all('div', {'class': 'user-review-reviewTextWrapper'})
+                for d in reviews_div:
+                    text=d.get_text()
+                    reviews.append(text)
+                print(len(reviews))
+                rate_box=soup.find_all('div', {'class': 'index-flexRow index-averageRating'})
+                for r in rate_box:
+                    rate=r.get_text()
+                    ratings.append(int(rate))
+            except:
+                pass
         else:
             response = requests.get(url)
             soup = BeautifulSoup(response.content, 'html.parser')
