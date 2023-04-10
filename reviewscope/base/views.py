@@ -100,7 +100,7 @@ def home(request):
                 pass
             # Find the div that contains the reviews
             try:
-                for i in range(1, 4):
+                for i in range(1, 7):
                     url=url+"&page="+str(i)
                     response = requests.get(url)
                     soup = BeautifulSoup(response.content, 'html.parser')
@@ -127,6 +127,8 @@ def home(request):
         outputs = model2.generate(inputs, max_length=150, min_length=40, length_penalty=2.0, num_beams=4, early_stopping=True)
         # decode
         summary = tokenizer2.decode(outputs[0])
+        summary = summary.replace('<pad>', '')
+        summary = summary.replace('</s>', '')
         res = []
         op = []
         rev_len = len(reviews)
