@@ -10,24 +10,24 @@
     padding: 0 15px;
 }
 
-.payments .container form .row {
+/* .payments .container form .row {
     display: flex;
     flex-wrap: wrap;
     gap: 15px;
-}
+} */
 
-.payments .container form .row .col .title {
+.payments .container form .row .details .title {
     font-size: 24px;
     color: #171941;
     padding-left: 7px;
     padding-bottom: 5px;
 }
 
-.payments .container form .row .col .inputBox {
+.payments .container form .row .details .inputBox {
     margin: 15px 0;
 }
 
-.payments .container form .row .col .inputBox span {
+.payments .container form .row .details .inputBox span {
     margin-bottom: 10px;
     padding-left: 10px;
     font-size: 16px;
@@ -35,7 +35,7 @@
     display: block;
 }
 
-.payments .container form .row .col .inputBox input {
+.payments .container form .row .details .inputBox input {
     width: 100%;
     border: 1px solid #ccc;
     border-radius: 25px;
@@ -46,24 +46,28 @@
     text-transform: none;
 }
 
-.payments .container form .row .col .inputBox input:focus {
+.payments .container form .row .details .inputBox input:focus {
     border: 1px solid #000;
 }
 
-.payments .container form .row .col .flex {
+.payments .container form .row .details .flex {
     display: flex;
     gap: 15px;
 }
 
-.payments .container form .row .col .flex .inputBox {
+.payments .container form .row .details .flex .inputBox {
     margin-top: 5px;
 }
 
-.payments .container form .row .col .inputBox img {
+.payments .container form .row .details .inputBox img {
     height: 34px;
     margin-top: 5px;
     padding-left: 10px;
     filter: drop-shadow(0 0 1px #000);
+}
+
+.payments .form-control::placeholder {
+    opacity: 0.69;
 }
 
 .payments .container form #submit-btn {

@@ -15,8 +15,8 @@
     <div class="container pb-5">
         <form class="payment-form" method="POST">
             {% csrf_token %}
-            <div class="row">
-                <div class="col" data-aos="fade-right">
+            <div class="row gy-5">
+                <div class="col-sm-6 details" data-aos="fade-right">
                     <h1 class="title fw-bold">Billing Address</h1>
                     <div class="inputBox">
                         <span>Name</span>
@@ -45,7 +45,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col" data-aos="fade-left">
+                <div class="col-sm-6 details" data-aos="fade-left">
                     <h1 class="title fw-bold">Payment Method</h1>
                     <div class="inputBox">
                         <span>Cards Accepted</span>
