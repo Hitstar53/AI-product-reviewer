@@ -1,3 +1,15 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+<title>ReviewScope | History</title>
+{% endblock title %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/history.css' %}">
+{% endblock css %}
+
+{% block content %}
 <!-- User Reviews section -->
 <section class="reviews pt-5">
     <div class="container">
@@ -72,3 +84,8 @@
         </div>
     </div>
 </section>
+{% endblock content %}
+
+{% block scripts %}
+<script src="{% static 'js/history.js' %}"></script>
+{% endblock scripts %}

@@ -1,0 +1,117 @@
+.heading {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.review-card {
+    margin: 20px;
+    padding: 20px;
+    width: 500px;
+    display: grid;
+    min-height: 200px;
+    border-radius: 10px;
+    transition: all 0.2s;
+    grid-template-rows: 20px 50px 1fr 50px;
+    box-shadow: 0px 6px 10px rgba(74, 70, 74, 0.414);
+}
+
+.review-card:hover {
+    transform: scale(1.01);
+    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.4);
+}
+
+.readMore,
+.close,
+.review-card div {
+    cursor: pointer;
+    position: relative;
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.stars ul {
+    display: flex;
+    padding: 0;
+    list-style: none;
+}
+
+.stars ul li {
+    margin: auto 0.3rem;
+    font-size: 1.1rem;
+}
+
+.mr-card .stars ul li:last-child {
+    margin-left: 1.4rem;
+    font-size: 1.5rem;
+}
+
+.desc {
+    color: rgb(66, 59, 59);
+}
+
+.readMore::after {
+    content: "";
+    position: absolute;
+    top: 25px;
+    left: 0;
+    width: 0%;
+    height: 3px;
+    transition: all 0.5s;
+    background-color: rgba(255, 255, 255, 0.6);
+}
+
+.readMore:hover {
+    color: #fff;
+}
+
+.readMore:hover::after {
+    width: 100%;
+}
+
+.close {
+    grid-row: 1/2;
+    justify-self: end;
+}
+
+.review-card div {
+    grid-row: 2/3;
+    font-size: 30px;
+}
+
+.read-more {
+    grid-row: 4/5;
+    align-self: center;
+}
+
+.card1 {
+    background: #3fbafe;
+}
+
+.card2 {
+    background: #f7a976;
+}
+
+.card3 {
+    background: #b69efe;
+}
+
+.card4 {
+    background: #60efbc;
+}
+
+.card5 {
+    background: #f588d8;
+}
+
+@media (max-width: 1600px) {
+    .cards {
+        justify-content: center;
+    }
+}

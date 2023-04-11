@@ -35,7 +35,7 @@
                 </li>
                 {% if user.is_authenticated %}
                 <li>
-                    <a href="#" class="nav-link">Past Reviews</a>
+                    <a href="{% url 'history' %}" class="nav-link">Past Reviews</a>
                 </li>
                 {% endif %}
                 <li>
