@@ -144,21 +144,32 @@ def home(request):
             rev_rate=0
             star = 0
             print(rev_len)
+            avg_pos=0
+            avg_neg=0
+            avg_neu=0
             for index, row in df_results.iterrows():
+                avg_pos+=row['roberta_pos']
+                avg_neg+=row['roberta_neg']
+                avg_neu+=row['roberta_neu']
                 star += lr_model.predict([[row['roberta_neg'],row['roberta_neu'],row['roberta_pos']]])
                 rev_rate+=row['Score']
+            avg_pos/=rev_len
+            avg_neg/=rev_len
+            avg_neu/=rev_len
             star/=rev_len
             rev_rate/=rev_len
             avg_rate = (star[0]+rev_rate)/2
             avg_rate = round(avg_rate, 2)
             iter = [1,2,3,4,5]
             # save to Review model
-            try:
-                for i in range(rev_len):
-                    review = Review.objects.create(review=reviews[i], rating=ratings[i], product_name=p_name)
-                    review.save()
-            except:
-                pass
+            # try:
+            #     for i in range(rev_len):
+            #         review = Review.objects.create(review=reviews[i], rating=ratings[i], product_name=p_name)
+            #         review.save()
+            # except:
+            #     pass
+            review = Review.objects.create(review=summary, rating=avg_rate, product_name=p_name,neg=avg_neg,neu=avg_neu,pos=avg_pos,user=request.user)
+            review.save()
             return render(request, 'base/home.html', {'avg' : avg_rate, 'iter' : iter, 'star' : star[0], 'rev' : rev_rate, 'p_name' : p_name, 'summary': summary})
     except:
         pass
