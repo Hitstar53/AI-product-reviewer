@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+<title>ReviewScope | History</title>
+{% endblock title %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/reviews.css' %}">
+{% endblock css %}
+
+{% block content %}
+<!-- search bar with filters -->
+<section class="search-filter">
+    <div class="container wrapper text-center">
+        <div class="heading">
+            <h1 class="fw-bold">Search For Product</h1>
+        </div>
+        <div id="search-container">
+            <input type="search" id="search-input" placeholder="Search product name here.." />
+            <button id="search">
+                <i class="fa-solid fa-search"></i>
+            </button>
+            <!-- calender input in the form of a button -->
+            <button id="date">
+                <i class="fa-solid fa-calendar"></i>
+            </button>
+            <div class="calendar hide"></div>
+        </div>
+        <div id="buttons">
+            <button class="button-value" onclick="filterProduct('all')">All</button>
+            <button class="button-value" onclick="filterProduct('Amazon')">
+                Amazon
+            </button>
+            <button class="button-value" onclick="filterProduct('Bottomwear')">
+                Bottomwear
+            </button>
+            <button class="button-value" onclick="filterProduct('Jacket')">
+                Jacket
+            </button>
+            <button class="button-value" onclick="filterProduct('Watch')">
+                Watch
+            </button>
+        </div>
+        <div id="products"></div>
+    </div>
+</section>
+<!-- Past Reviews section -->
+<section class="reviews pt-5">
+    <div class="container">
+        <div class="heading">
+            <h1 class="fw-bold">Past Reviews</h1>
+        </div>
+        <div class="cards">
+        {% for review in reviews %}
+            {% if review.user == request.user %}
+            <div class="review-card card1">
+                <div class="stars">
+                    <ul>
+                        <li><i class="fa-solid fa-star"></i></li>
+                        <li><i class="fa-solid fa-star"></i></li>
+                        <li><i class="fa-solid fa-star"></i></li>
+                        <li><i class="fa-solid fa-star"></i></li>
+                        <li><i class="fa-solid fa-star"></i></li>
+                    </ul>
+                </div>
+                <p class="close"><i class="fa-solid fa-xmark"></i></p>
+                <p class="desc">
+                    {{ review.summary }}
+                </p>
+                <p class="read-more">
+                    <a class="readMore" href="#">Read More <i class="fas fa-arrow-right"></i></a>
+                </p>
+            </div>
+        {% endif %}
+        {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+{% block scripts %}
+<script src="{% static 'js/reviews.js' %}"></script>
+{% endblock scripts %}

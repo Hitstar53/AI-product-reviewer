@@ -52,8 +52,7 @@ def clean(text):
 
 # Create your views here.
 def home(request):
-    try:
-        if request.method == 'POST':
+    if request.method == 'POST':
             reviews = []
             ratings=[]
             p_name = ''
@@ -168,11 +167,9 @@ def home(request):
             #         review.save()
             # except:
             #     pass
-            review = Review.objects.create(review=summary, rating=avg_rate, product_name=p_name,neg=avg_neg,neu=avg_neu,pos=avg_pos,user=request.user)
+            review = Review.objects.create(summary=summary, rating=avg_rate, product_name=p_name,neg=avg_neg,neu=avg_neu,pos=avg_pos,user=request.user)
             review.save()
             return render(request, 'base/home.html', {'avg' : avg_rate, 'iter' : iter, 'star' : star[0], 'rev' : rev_rate, 'p_name' : p_name, 'summary': summary})
-    except:
-        pass
     return render(request, 'base/home.html')
 
 def payment(request):
@@ -202,8 +199,8 @@ def contact(request):
         return render(request, 'base/contact.html')
     return render(request, 'base/contact.html')
 
-def history(request):
-    return render(request, 'base/history.html')
+def reviews(request):
+    return render(request, 'base/reviews.html', {'reviews': Review.objects.all()})
 
 def search(request):
     if request.method == 'POST':
