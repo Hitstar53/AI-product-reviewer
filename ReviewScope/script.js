@@ -4,35 +4,16 @@ const modelrate = document.querySelector(".model-rating");
 const modelrev = document.querySelector(".model-review");
 const loader = document.querySelector(".loader");
 const stars = document.querySelectorAll(".star");
-let toggle = true;
-searchbtn.addEventListener("click", function () {
-    modelans.style.display = "block";
-    if (!toggle) {
-        loader.style.display = "block";
-        modelrate.style.display = "none";
-        toggle = true;
-    }
-    //display loader for 3 seconds
-    setTimeout(function () {
-        loader.style.display = "none";
-        modelrate.style.display = "block";
-        toggle = false;
-    }, 2000);
-    let random = Math.floor(Math.random() * 6) + 1;
-    for (let i=4;i>=random;i--) {
-        stars[i].style.fill = "#444654"
-    }
-    for (let i=0;i<random-1;i++) {
-        stars[i].style.fill = "#ffd700"
-    }
-    modelrev.innerHTML = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur ducimus aspernatur, fugiat labore aliquid assumenda. Suscipit delectus aliquid impedit reprehenderit. Saepe ea, nostrum facilis maxime dolores eum voluptatem nisi veritatis doloremque eaque inventore ipsam voluptatum cum.";
-});
+const ratingp = document.querySelector(".rating");
 
 // Capture the input URL from your Chrome extension
 // Get the form element and add an event listener for form submission
 // var inputUrl = "https://www.amazon.in/Redmi-Storage-Super-Amoled-Display/product-reviews/B0948NNY3W/ref=cm_cr_dp_d_s";
+
 var searchForm = document.getElementById('searchForm');
 var inputValue = '';
+var summary = '';
+var rating = 0;
 searchForm.addEventListener('submit', function (event) {
     event.preventDefault();
     // Get the input text value from the input element
@@ -51,17 +32,45 @@ searchForm.addEventListener('submit', function (event) {
     .then(response => {
         // Handle the response from the Django REST API
         if (response.ok) {
-            // Success
             console.log('URL sent to Django API successfully');
-            // get the response data
-            console.log(response.json());
+            response.json().then(data => {
+                console.log('Django API response:', data);
+                var summary = data[0].summary;
+                var rating = data[0].rating;
+                modelrev.innerHTML = summary;
+                ratingp.innerHTML = "Rating by AI: "+rating+"/5";
+                loader.style.display="None";
+                modelrate.style.display="block";
+                toggle = false;
+                for (let i = 4; i >=parseInt(rating); i--) {
+                    stars[i].style.fill = "#666874"
+                }
+                for(let i = 0; i < parseInt(rating) - 1; i++) {
+                    stars[i].style.fill = "#ffd700"
+                }
+            });
         } else {
-            // Error
             console.error('Failed to send URL to Django API:', response.statusText);
         }
     })
     .catch(error => {
-        // Handle any errors that may occur during the HTTP request
         console.error('Error sending URL to Django API:', error);
     });
+    
+});
+
+let toggle = true;
+searchbtn.addEventListener("click", function () {
+    modelans.style.display = "block";
+    if (!toggle) {
+        loader.style.display = "block";
+        modelrate.style.display = "none";
+        toggle = true;
+    }
+    //display loader for 3 seconds
+    setTimeout(function () {
+        loader.style.display = "none";
+        modelrate.style.display = "block";
+        toggle = false;
+    }, 99999);
 });

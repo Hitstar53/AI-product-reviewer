@@ -135,4 +135,5 @@ svg rect {
 
 .rating-wrap svg path {
     fill: #ffd700;
+    outline: 2px solid #ffd700;
 }
