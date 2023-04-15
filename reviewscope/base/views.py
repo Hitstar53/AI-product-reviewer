@@ -50,6 +50,22 @@ def clean(text):
     text = cleantext.clean(text, to_ascii=True, lower=True, no_line_breaks=True, no_urls=True, no_emails=True,no_emoji=True, no_phone_numbers=True, no_numbers=False, no_digits=False, no_currency_symbols=True, no_punct=False, replace_with_url="", replace_with_email="", replace_with_phone_number="", replace_with_number="", replace_with_digit="0", replace_with_currency_symbol="")
     return text
 
+def get_summary(reviews):
+    # text summarization
+    # merge reviews
+    merged_reviews = ''
+    for i in range(len(reviews)):
+        merged_reviews += reviews[i]
+    # tokenize
+    inputs = tokenizer2.encode("summarize: " + merged_reviews, return_tensors="pt", max_length=512, truncation=True)
+    # generate summary
+    outputs = model2.generate(inputs, max_length=150, min_length=40, length_penalty=2.0, num_beams=4, early_stopping=True)
+    # decode
+    summary = tokenizer2.decode(outputs[0])
+    summary = summary.replace('<pad>', '')
+    summary = summary.replace('</s>', '')
+    return summary
+
 # Create your views here.
 def home(request):
     if request.method == 'POST':
@@ -57,6 +73,7 @@ def home(request):
             ratings=[]
             p_name = ''
             rev_len=1
+            iter = [1,2,3,4,5]
             headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36'}
             url = request.POST['query']
             if url == '':
@@ -64,6 +81,11 @@ def home(request):
             if 'amazon' in url:
                 reviews,ratings,p_name = api_call(url)
                 rev_len = len(reviews)
+                review = Review.objects.filter(product_name=p_name)
+                if review.exists():
+                    avg_rate = review.rating
+                    summary = review.summary
+                    return render(request, 'base/home.html', {'avg' : avg_rate, 'iter' : iter, 'p_name' : p_name, 'summary': summary})
             elif 'myntra' in url:
                 response = requests.get(url, headers=headers)
                 soup = BeautifulSoup(response.content, 'html.parser')
@@ -72,6 +94,11 @@ def home(request):
                     p_name = soup.find('div', {'class': 'product-details-brand'}).get_text()
                     p_name += soup.find('div', {'class': 'product-details-name'}).get_text()
                     print(p_name)
+                    review = Review.objects.filter(product_name=p_name)
+                    if review.exists():
+                        avg_rate = review.rating
+                        summary = review.summary
+                        return render(request, 'base/home.html', {'avg' : avg_rate, 'iter' : iter, 'p_name' : p_name, 'summary': summary})
                 except:
                     pass
                 # get the review from div with class user-review-reviewTextWrapper
@@ -96,6 +123,11 @@ def home(request):
                     # remove the "reviews" from the end of the product name
                     p_name = p_name[:-7]
                     print(p_name)
+                    review = Review.objects.filter(product_name=p_name)
+                    if review.exists():
+                        avg_rate = review.rating
+                        summary = review.summary
+                        return render(request, 'base/home.html', {'avg' : avg_rate, 'iter' : iter, 'p_name' : p_name, 'summary': summary})
                 except:
                     pass
                 # Find the div that contains the reviews
@@ -116,19 +148,7 @@ def home(request):
                             ratings.append(int(rate))
                 except:
                     pass
-            # text summarization
-            # merge reviews
-            merged_reviews = ''
-            for i in range(len(reviews)):
-                merged_reviews += reviews[i]
-            # tokenize
-            inputs = tokenizer2.encode("summarize: " + merged_reviews, return_tensors="pt", max_length=512, truncation=True)
-            # generate summary
-            outputs = model2.generate(inputs, max_length=150, min_length=40, length_penalty=2.0, num_beams=4, early_stopping=True)
-            # decode
-            summary = tokenizer2.decode(outputs[0])
-            summary = summary.replace('<pad>', '')
-            summary = summary.replace('</s>', '')
+            summary = get_summary(reviews)
             res = []
             op = []
             rev_len = len(reviews)
@@ -159,16 +179,21 @@ def home(request):
             rev_rate/=rev_len
             avg_rate = (star[0]+rev_rate)/2
             avg_rate = round(avg_rate, 2)
-            iter = [1,2,3,4,5]
-            # save to Review model
-            # try:
-            #     for i in range(rev_len):
-            #         review = Review.objects.create(review=reviews[i], rating=ratings[i], product_name=p_name)
-            #         review.save()
-            # except:
-            #     pass
-            review = Review.objects.create(summary=summary, rating=avg_rate, product_name=p_name,neg=avg_neg,neu=avg_neu,pos=avg_pos,user=request.user)
-            review.save()
+            review = Review.objects.filter(product_name=p_name)
+            if review.exists():
+                review = review[0]
+                review.summary = summary
+                review.rating = avg_rate
+                review.neg = avg_neg
+                review.neu = avg_neu
+                review.pos = avg_pos
+                review.save()
+            else:
+                user = None
+                if request.user.is_authenticated:
+                    user = request.user
+                review = Review.objects.create(summary=summary, rating=avg_rate, product_name=p_name,neg=avg_neg,neu=avg_neu,pos=avg_pos,user=user)
+                review.save()
             return render(request, 'base/home.html', {'avg' : avg_rate, 'iter' : iter, 'star' : star[0], 'rev' : rev_rate, 'p_name' : p_name, 'summary': summary})
     return render(request, 'base/home.html')
 
