@@ -11,39 +11,21 @@
 
 {% block content %}
 <!-- search bar with filters -->
-<section class="search-filter">
-    <div class="container wrapper text-center">
-        <div class="heading">
-            <h1 class="fw-bold">Search For Product</h1>
-        </div>
-        <div id="search-container">
-            <input type="search" id="search-input" placeholder="Search product name here.." />
-            <button id="search">
-                <i class="fa-solid fa-search"></i>
-            </button>
-            <!-- calender input in the form of a button -->
-            <button id="date">
-                <i class="fa-solid fa-calendar"></i>
-            </button>
-            <div class="calendar hide"></div>
-        </div>
-        <div id="buttons">
-            <button class="button-value" onclick="filterProduct('all')">All</button>
-            <button class="button-value" onclick="filterProduct('Amazon')">
-                Amazon
-            </button>
-            <button class="button-value" onclick="filterProduct('Bottomwear')">
-                Bottomwear
-            </button>
-            <button class="button-value" onclick="filterProduct('Jacket')">
-                Jacket
-            </button>
-            <button class="button-value" onclick="filterProduct('Watch')">
-                Watch
-            </button>
-        </div>
-        <div id="products"></div>
+<section class="search-container">
+    <div class="input-box">
+      <i class="uil uil-search"></i>
+      <input type="text" placeholder="Search here..." />
+      <button class="button">Search</button>
     </div>
+</section>
+<!-- search bar with filters -->
+<section class="stats">
+    <div class="pie" style="--p:20"> 20%</div>
+        <div class="pie" style="--p:40;--c:darkblue;--b:10px"> 40%</div>
+        <div class="pie no-round" style="--p:60;--c:purple;--b:15px"> 60%</div>
+        <div class="pie animate no-round" style="--p:80;--c:orange;"> 80%</div>
+        <div class="pie animate" style="--p:90;--c:lightgreen"> 90%</div>
+    
 </section>
 <!-- Past Reviews section -->
 <section class="reviews pt-5">

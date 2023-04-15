@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.core.mail import send_mail
 import pandas as pd
-from transformers import AutoTokenizer
+from transformers import AutoTokenizer, pipeline
 from transformers import AutoModelForSequenceClassification
 from transformers import AutoModelWithLMHead
 from scipy.special import softmax
@@ -14,7 +14,7 @@ import cleantext
 import requests
 from bs4 import BeautifulSoup
 from .models import Review
-
+import time
 #setup model (roberta)
 warnings.filterwarnings("ignore")
 lr_model=load('./savedModels/rating_predictor_updated.joblib')
@@ -64,6 +64,9 @@ def get_summary(reviews):
     summary = tokenizer2.decode(outputs[0])
     summary = summary.replace('<pad>', '')
     summary = summary.replace('</s>', '')
+    # summarizer = pipeline("summarization")
+    # summarized = summarizer(to_tokenize, min_length=75, max_length=300)
+    # summ=' '.join([str(i) for i in summarized])
     return summary
 
 # Create your views here.
@@ -79,12 +82,21 @@ def home(request):
             if url == '':
                 return render(request, 'base/home.html')
             if 'amazon' in url:
-                reviews,ratings,p_name = api_call(url)
+                a=True
+                while a:
+                    try:
+                        reviews,ratings,p_name = api_call(url)
+                        a=False
+                    except:
+                        #wait for 10 sec
+                        print('waiting for 10 sec')
+                        a=True
+                        time.sleep(10)
                 rev_len = len(reviews)
                 review = Review.objects.filter(product_name=p_name)
                 if review.exists():
-                    avg_rate = review.rating
-                    summary = review.summary
+                    avg_rate = review[0].rating
+                    summary = review[0].summary
                     return render(request, 'base/home.html', {'avg' : avg_rate, 'iter' : iter, 'p_name' : p_name, 'summary': summary})
             elif 'myntra' in url:
                 response = requests.get(url, headers=headers)
@@ -96,8 +108,8 @@ def home(request):
                     print(p_name)
                     review = Review.objects.filter(product_name=p_name)
                     if review.exists():
-                        avg_rate = review.rating
-                        summary = review.summary
+                        avg_rate = review[0].rating
+                        summary = review[0].summary
                         return render(request, 'base/home.html', {'avg' : avg_rate, 'iter' : iter, 'p_name' : p_name, 'summary': summary})
                 except:
                     pass
@@ -125,8 +137,8 @@ def home(request):
                     print(p_name)
                     review = Review.objects.filter(product_name=p_name)
                     if review.exists():
-                        avg_rate = review.rating
-                        summary = review.summary
+                        avg_rate = review[0].rating
+                        summary = review[0].summary
                         return render(request, 'base/home.html', {'avg' : avg_rate, 'iter' : iter, 'p_name' : p_name, 'summary': summary})
                 except:
                     pass
