@@ -230,6 +230,10 @@ ul {
 }
 
 /*responsive*/
+.nav-toggle {
+    display: none;
+}
+
 @media screen and (max-width: 768px) {
     .nav-list {
         display: none;

@@ -11,20 +11,23 @@
 
 {% block content %}
 <!-- search bar with filters -->
-<section class="search-container">
-    <div class="input-box">
-      <i class="uil uil-search"></i>
-      <input type="text" placeholder="Search here..." />
-      <button class="button">Search</button>
+<section class="search-box">
+    <div class="container">
+        <div class="heading">
+            <h1 class="fw-bold">Search For A Product</h1>
+        </div>
+        <div class="search">
+            <form action="" method="GET">
+                <div class="input-group">
+                    <input id="myInput" type="text" class="form-control" onkeyup="myFunction()" placeholder="Search for a product" name="search">
+                    <button class="btn btn-primary search-button" type="submit">Search</button>
+                </div>
+            </form>
+        </div>
     </div>
 </section>
 <!-- search bar with filters -->
-<section class="stats">
-    <div class="pie" style="--p:20"> 20%</div>
-        <div class="pie" style="--p:40;--c:darkblue;--b:10px"> 40%</div>
-        <div class="pie no-round" style="--p:60;--c:purple;--b:15px"> 60%</div>
-        <div class="pie animate no-round" style="--p:80;--c:orange;"> 80%</div>
-        <div class="pie animate" style="--p:90;--c:lightgreen"> 90%</div>
+<section class="stats-card">
     
 </section>
 <!-- Past Reviews section -->
@@ -36,17 +39,24 @@
         <div class="cards">
         {% for review in reviews %}
             {% if review.user == request.user %}
-            <div class="review-card card1">
+            <div class="review-card card">
+                <p class="title">
+                    {{ review }}
+                </p>
                 <div class="stars">
                     <ul>
+                        {% for i in iter %}
+                        {% if i < review.rating %}
                         <li><i class="fa-solid fa-star"></i></li>
-                        <li><i class="fa-solid fa-star"></i></li>
-                        <li><i class="fa-solid fa-star"></i></li>
-                        <li><i class="fa-solid fa-star"></i></li>
-                        <li><i class="fa-solid fa-star"></i></li>
+                        {% else %}
+                        <li><i class="fa-regular fa-star"></i></li>
+                        {% endif %}
+                        {% endfor %}
+                        <li class="px-5">
+                            {{ review.rating }} / 5
+                        </li>
                     </ul>
                 </div>
-                <p class="close"><i class="fa-solid fa-xmark"></i></p>
                 <p class="desc">
                     {{ review.summary }}
                 </p>

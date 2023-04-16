@@ -223,7 +223,7 @@ def success(request):
 
 def contact(request):
     if request.method == 'POST':
-        name = request.POST['name']
+        name = request.POST['uname']
         email = request.POST['email']
         message = request.POST['message']
         send_mail(
@@ -237,7 +237,8 @@ def contact(request):
     return render(request, 'base/contact.html')
 
 def reviews(request):
-    return render(request, 'base/reviews.html', {'reviews': Review.objects.all()})
+    iter = [1,2,3,4,5]
+    return render(request, 'base/reviews.html', {'reviews': Review.objects.all(), 'iter': iter})
 
 def search(request):
     if request.method == 'POST':

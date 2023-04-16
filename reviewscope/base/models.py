@@ -13,4 +13,4 @@ class Review(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     def __str__(self):
-        return self.product_name
+        return self.product_name[:50]+'...'

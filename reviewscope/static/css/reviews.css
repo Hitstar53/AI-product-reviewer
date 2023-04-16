@@ -1,4 +1,36 @@
-/* past reviews */
+/* search box */
+.search-box {
+    margin-top: 8rem;
+}
+
+.search {
+    margin: auto;
+    width: 50%;
+}
+
+.form-control {
+    border-radius: 100vw;
+    height: 45px;
+}
+
+.form-control:focus {
+    box-shadow: none;
+}
+
+.search-button {
+    font-weight: 600;
+    border-radius: 100vw;
+}
+
+.search-button:hover {
+    background: #171941;
+    color: #fff;
+}
+
+/* statistic card */
+
+
+/* past review cards */
 .heading {
     font-size: 2.5rem;
     margin-bottom: 2rem;
@@ -24,12 +56,11 @@
 }
 
 .review-card:hover {
-    transform: scale(1.01);
+    transform: scale(1.02);
     box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.4);
 }
 
 .readMore,
-.close,
 .review-card div {
     cursor: pointer;
     position: relative;
@@ -45,12 +76,11 @@
 
 .stars ul li {
     margin: auto 0.3rem;
-    font-size: 1.1rem;
+    font-size: 1.3rem;
 }
 
-.mr-card .stars ul li:last-child {
-    margin-left: 1.4rem;
-    font-size: 1.5rem;
+.stars ul li:first-child {
+    margin-left: 0;
 }
 
 .desc {
@@ -76,14 +106,16 @@
     width: 100%;
 }
 
-.close {
+.title {
     grid-row: 1/2;
-    justify-self: end;
+    justify-self: start;
+    font-size: 1rem;
+    font-weight: 600;
 }
 
 .review-card div {
+    padding: 10px 0;
     grid-row: 2/3;
-    font-size: 30px;
 }
 
 .read-more {
@@ -91,181 +123,8 @@
     align-self: center;
 }
 
-.card1 {
-    background: #3fbafe;
-}
-
-.card2 {
-    background: #f7a976;
-}
-
-.card3 {
-    background: #b69efe;
-}
-
-.card4 {
-    background: #60efbc;
-}
-
-.card5 {
-    background: #f588d8;
-}
-
 @media (max-width: 1600px) {
     .cards {
         justify-content: center;
     }
-}
-
-/*searchbar*/
-.search-container {
-    margin: 8rem auto;
-}
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Poppins", sans-serif;
-}
-
-.input-box {
-    position: relative;
-    height: 76px;
-    max-width: 900px;
-    width: 100%;
-    background: #fff;
-    margin: 0 20px;
-    border-radius: 8px;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-}
-
-.input-box i,
-.input-box .button {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-}
-
-.input-box i {
-    left: 20px;
-    font-size: 30px;
-    color: #707070;
-}
-
-.input-box input {
-    height: 100%;
-    width: 100%;
-    outline: none;
-    font-size: 18px;
-    font-weight: 400;
-    border: none;
-    padding: 0 155px 0 65px;
-    background-color: transparent;
-}
-
-.input-box .button {
-    right: 20px;
-    font-size: 16px;
-    font-weight: 400;
-    color: #fff;
-    border: none;
-    padding: 12px 30px;
-    border-radius: 6px;
-    background-color: #4070f4;
-    cursor: pointer;
-}
-
-.input-box .button:active {
-    transform: translateY(-50%) scale(0.98);
-}
-
-/* Responsive */
-@media screen and (max-width: 500px) {
-    .input-box {
-        height: 66px;
-        margin: 0 8px;
-    }
-
-    .input-box i {
-        left: 12px;
-        font-size: 25px;
-    }
-
-    .input-box input {
-        padding: 0 112px 0 50px;
-    }
-
-    .input-box .button {
-        right: 12px;
-        font-size: 14px;
-        padding: 8px 18px;
-    }
-}
-
-/*stats*/
-@property --p {
-    syntax: '<number>';
-    inherits: true;
-    initial-value: 0;
-}
-
-.pie {
-    --p: 20;
-    --b: 22px;
-    --c: darkred;
-    --w: 150px;
-
-    width: var(--w);
-    aspect-ratio: 1;
-    position: relative;
-    display: inline-grid;
-    margin: 5px;
-    place-content: center;
-    font-size: 25px;
-    font-weight: bold;
-    font-family: sans-serif;
-}
-
-.pie:before,
-.pie:after {
-    content: "";
-    position: absolute;
-    border-radius: 50%;
-}
-
-.pie:before {
-    inset: 0;
-    background:
-        radial-gradient(farthest-side, var(--c) 98%, #0000) top/var(--b) var(--b) no-repeat,
-        conic-gradient(var(--c) calc(var(--p)*1%), #0000 0);
-    -webkit-mask: radial-gradient(farthest-side, #0000 calc(99% - var(--b)), #000 calc(100% - var(--b)));
-    mask: radial-gradient(farthest-side, #0000 calc(99% - var(--b)), #000 calc(100% - var(--b)));
-}
-
-.pie:after {
-    inset: calc(50% - var(--b)/2);
-    background: var(--c);
-    transform: rotate(calc(var(--p)*3.6deg)) translateY(calc(50% - var(--w)/2));
-}
-
-.animate {
-    animation: p 1s .5s both;
-}
-
-.no-round:before {
-    background-size: 0 0, auto;
-}
-
-.no-round:after {
-    content: none;
-}
-
-@keyframes p {
-    from {
-        --p: 0
-    }
-}
-
-body {
-    background: #ddd;
 }
