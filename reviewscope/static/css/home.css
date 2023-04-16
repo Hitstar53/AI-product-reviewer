@@ -128,9 +128,11 @@
 }
 
 .accordion-item .accordion-button {
+    background-color: #fff;
     color: #171941;
     font-weight: 600;
     font-size: 1.1rem;
+    box-shadow: none;
     transition: all 0.2s ease-in-out;
 }
 

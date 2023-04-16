@@ -109,7 +109,7 @@
     <div class="heading pricing pt-5">
         <h1 class="fw-bold">Frequently Asked Questions</h1>
     </div>
-    <div class="container">
+    <div class="container" style="max-width:1100px;">
         <div class="accordion accordion-flush" id="questions" data-aos="fade-up">
             <!-- item #1 -->
             <div class="accordion-item" data-aos="fade-up">
@@ -207,7 +207,7 @@
                             <span class="icon check"><i class="fas fa-check"></i></span>
                         </li>
                     </ul>
-                    <a href="{% url 'payment' %}">Buy Now</a>
+                    <a href="{% url 'payment' plan='soldier' %}">Buy Now</a>
                 </div>
             </div>
         </div>
@@ -231,7 +231,7 @@
                             <span class="icon check"><i class="fas fa-check"></i></span>
                         </li>
                     </ul>
-                    <a class="middle-a" href="{% url 'payment' %}">Buy Now</a>
+                    <a class="middle-a" href="{% url 'payment' plan='commander' %}">Buy Now</a>
                 </div>
             </div>
         </div>
@@ -255,7 +255,7 @@
                             <span class="icon check"><i class="fas fa-checl"></i></span>
                         </li>
                     </ul>
-                    <a href="{% url 'payment' %}">Buy Now</a>
+                    <a href="{% url 'payment' plan='prince' %}">Buy Now</a>
                 </div>
             </div>
         </div>

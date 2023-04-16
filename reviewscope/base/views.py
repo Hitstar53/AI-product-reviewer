@@ -209,14 +209,21 @@ def home(request):
             return render(request, 'base/home.html', {'avg' : avg_rate, 'iter' : iter, 'star' : star[0], 'rev' : rev_rate, 'p_name' : p_name, 'summary': summary})
     return render(request, 'base/home.html')
 
-def payment(request):
+def payment(request,plan):
     if request.method == 'POST':
         name = request.form.get('name')
         email = request.form.get('email')
         address = request.form.get('address')+','+request.form.get('city')+','+request.form.get('zipcode')
-        amt = 690
         pstatus = 'success'
-    return render(request, 'base/payment.html')
+    if plan == 'soldier':
+            amt = 38
+    elif plan == 'commander':
+            amt = 69
+    elif plan == 'prince':
+            amt = 138
+    else:
+        amt = 0
+    return render(request, 'base/payment.html',{'amt':amt})
 
 def success(request):
     return render(request, 'base/success.html')
