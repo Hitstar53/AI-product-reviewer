@@ -28,7 +28,19 @@
 }
 
 /* statistic card */
+.charts {
+    display: flex;
+    justify-content: space-around;
+    gap: 15rem;
+}
 
+#myChart1 {
+    order: 2;
+}
+
+#myChart2 {
+    order: 1;
+}
 
 /* past review cards */
 .heading {
