@@ -3,8 +3,8 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializers import ReviewSerializer
-from base.models import Review
-from base.views import api_call, get_summary, polarity_scores_roberta_list, clean, lr_model
+from base.models import GeneralReviews
+from base.views import api_call, web_scraper, get_summary, polarity_scores_roberta_list, clean, lr_model
 import pandas as pd
 
 # Create your views here.
@@ -52,7 +52,7 @@ def getReview(request):
     elif 'amazon' in product_url:
         reviews,ratings,p_name = api_call(product_url)
         rev_len = len(reviews)
-    review_data = Review.objects.filter(product_name=p_name)
+    review_data = GeneralReviews.objects.filter(product_name=p_name)
     # get summary from the database if it exists
     print(review_data)
     if review_data.exists():
@@ -93,9 +93,9 @@ def getReview(request):
         user = None
         if request.user.is_authenticated:
             user = request.user
-        review = Review.objects.create(summary=summary, rating=avg_rate, product_name=p_name,neg=avg_neg,neu=avg_neu,pos=avg_pos, user=user)
+        review = GeneralReviews.objects.create(summary=summary, rating=avg_rate, product_name=p_name,neg=avg_neg,neu=avg_neu,pos=avg_pos, user=user)
         review.save()
-        review_data = Review.objects.filter(product_name=p_name)
+        review_data = GeneralReviews.objects.filter(product_name=p_name)
         serializer = ReviewSerializer(review_data, many=True)
         return Response(serializer.data)
 
