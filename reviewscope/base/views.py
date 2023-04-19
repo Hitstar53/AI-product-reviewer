@@ -89,6 +89,17 @@ def api_call(link):
         ratings.append(result[0][i]['rating'])
     return reviews,ratings,p_name
 
+def get_image(url):
+    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36'}
+    response = requests.get(url, headers=headers)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    if 'amazon' in url:
+        image = soup.find('img', {'data-hook':'cr-product-image'})['src']
+        print(image)
+    elif 'flipkart' in url:
+        image = soup.find('img', {'class': '_396cs4 _3exPp9'})['src']
+    return image
+
 def clean(text):
     text = cleantext.clean(text, to_ascii=True, lower=True, no_line_breaks=True, no_urls=True, no_emails=True,no_emoji=True, no_phone_numbers=True, no_numbers=False, no_digits=False, no_currency_symbols=True, no_punct=False, replace_with_url="", replace_with_email="", replace_with_phone_number="", replace_with_number="", replace_with_digit="0", replace_with_currency_symbol="")
     return text
@@ -104,9 +115,9 @@ def web_scraper(url):
                 reviews,ratings,p_name = api_call(url)
                 break
             except:
-                #wait for 10 sec
                 print('waiting for 10 sec')
                 time.sleep(10)
+        image = get_image(url)
         rev_len = len(reviews)
         review = GeneralReviews.objects.filter(product_name=p_name)
         avg_rate = 0
@@ -114,25 +125,18 @@ def web_scraper(url):
         if review.exists():
             avg_rate = review[0].rating
             summary = review[0].summary
-    return avg_rate, p_name, summary,reviews,ratings,rev_len
+    return avg_rate, p_name, summary,reviews,ratings,rev_len,image
 
 def get_summary(reviews):
     # text summarization
-    # merge reviews
     merged_reviews = ''
     for i in range(len(reviews)):
         merged_reviews += reviews[i]
-    # tokenize
     inputs = tokenizer2.encode("summarize: " + merged_reviews, return_tensors="pt", max_length=512, truncation=True)
-    # generate summary
     outputs = model2.generate(inputs, max_length=150, min_length=40, length_penalty=2.0, num_beams=4, early_stopping=True)
-    # decode
     summary = tokenizer2.decode(outputs[0])
     summary = summary.replace('<pad>', '')
     summary = summary.replace('</s>', '')
-    # summarizer = pipeline("summarization")
-    # summarized = summarizer(to_tokenize, min_length=75, max_length=300)
-    # summ=' '.join([str(i) for i in summarized])
     return summary
 
 # Create your views here.
@@ -141,18 +145,19 @@ def home(request):
             reviews = []
             ratings=[]
             p_name = ''
+            image = ''
             rev_len=1
             iter = [1,2,3,4,5]
             url = request.POST['query']
             if url == '':
                 return render(request, 'base/home.html')
-            avg_rate, p_name, summary, reviews, ratings, rev_len = web_scraper(url)
+            avg_rate, p_name, summary, reviews, ratings, rev_len, image = web_scraper(url)
 
             if avg_rate != 0:
                 review = GeneralReviews.objects.filter(product_name=p_name)
                 avg_rate = review[0].rating
                 summary = review[0].summary
-                return render(request, 'base/home.html', {'avg' : avg_rate, 'iter' : iter, 'p_name' : p_name, 'summary': summary})
+                return render(request, 'base/home.html', {'avg' : avg_rate, 'iter' : iter, 'p_name' : p_name, 'summary': summary, 'img': image})
             #return render(request, 'base/home.html', {'avg' : avg_rate, 'iter' : iter, 'p_name' : p_name, 'summary': summary})
             # elif 'myntra' in url:
             #     response = requests.get(url, headers=headers)
@@ -259,7 +264,7 @@ def home(request):
             else:
                 review = GeneralReviews.objects.create(summary=summary, rating=avg_rate, product_name=p_name,neg=avg_neg,neu=avg_neu,pos=avg_pos)
                 review.save()
-            return render(request, 'base/home.html', {'avg' : avg_rate, 'iter' : iter, 'star' : star, 'rev' : rev_rate, 'p_name' : p_name, 'summary': summary})
+            return render(request, 'base/home.html', {'avg' : avg_rate, 'iter' : iter, 'star' : star, 'rev' : rev_rate, 'p_name' : p_name, 'summary': summary, 'img': image})
     return render(request, 'base/home.html')
 
 def payment(request,plan):

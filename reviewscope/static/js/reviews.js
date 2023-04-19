@@ -35,9 +35,8 @@ function myFunction() {
 }
 
 // charts.js
-const ctx1 = document.getElementById('myChart1');
-const ctx2 = document.getElementById('myChart2');
-const ctx3 = document.getElementById('myChart3');
+const ctx1 = document.getElementById('pieChart');
+const ctx2 = document.getElementById('barChart');
 
 const myChart = new Chart(ctx1, {
     type: 'doughnut',
@@ -71,19 +70,23 @@ const myChart = new Chart(ctx1, {
 const myChart2 = new Chart(ctx2, {
     type: 'bar',
     data: {
-        labels: ['Positive', 'Negative', 'Neutral'],
+        labels: ['1 star', '2 star', '3 star', '4 star', '5 star'],
         datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3],
+            label: 'Rating',
+            data: [12, 19, 3, 5, 2],
             backgroundColor: [
-                'rgba(0, 255, 0, 0.2)',
-                'rgba(255, 0, 0, 0.2)',
-                'rgba(0, 0, 255, 0.2)'
+                'rgba(255, 0, 0, 0.5)',
+                'rgba(255, 0, 0, 0.5)',
+                'rgba(0, 0, 255, 0.5)',
+                'rgba(0, 255, 0, 0.5)',
+                'rgba(0, 255, 0, 0.5)'
             ],
             borderColor: [
-                'rgba(0, 255, 0, 1)',
                 'rgba(255, 0, 0, 1)',
-                'rgba(0, 0, 255, 1)'
+                'rgba(255, 0, 0, 1)',
+                'rgba(0, 0, 255, 1)',
+                'rgba(0, 255, 0, 1)',
+                'rgba(0, 255, 0, 1)'
             ],
             borderWidth: 1
         }]
