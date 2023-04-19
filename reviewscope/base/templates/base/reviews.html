@@ -26,17 +26,47 @@
         </div>
     </div>
 </section>
-<!-- search bar with filters -->
-<section class="stats-card">
-    <div class="container | charts" style="max-width:400px;">
-        <canvas id="myChart1"></canvas>
-        <canvas id="myChart2"></canvas>
-    </div>
-</section>
-<!--Stats Card-->
-<section>
 
-</section>    
+<!--Stats Card-->
+<section class="stats-card py-5">
+    <div class="container">
+        <div class="heading">
+            <h1 class="fw-bold">AI Generated Review</h1>
+        </div>
+        <div class="mr-card card mx-auto mb-3 p-5">
+            <div class="mr-content">
+                <h2 class="mr-title fw-bold">Product Name</h2>
+                <p class="mr-rating">
+                    <div class="stars">
+                        <ul>
+                            <li class="rating">Rating: </li>
+                            <li><i class="fa-solid fa-star"></i></li>
+                            <li><i class="fa-solid fa-star"></i></li>
+                            <li><i class="fa-solid fa-star"></i></li>
+                            <li><i class="fa-solid fa-star"></i></li>
+                            <li><i class="fa-regular fa-star"></i></li>
+                            <li class="model-rating fw-bold">
+                                4.0 / 5
+                            </li>
+                        </ul>
+                    </div>
+                </p>
+                <p class="mr-summary">
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iure nihil voluptatum qui nemo, nisi esse inventore nostrum eveniet reprehenderit voluptas, enim eaque nesciunt rerum doloribus cumque optio corporis rem et deserunt soluta recusandae ipsum! Vitae nobis, ex doloribus ducimus nostrum distinctio? Similique iusto dolores architecto. Voluptatem optio facilis vel magnam!
+                </p>
+            </div>  
+            <div class="mr-image">
+                <img src="{% static 'assets/ai-review.webp' %}" alt="product image">
+            </div>
+            <div class="mr-chart" style="max-width:400px;">
+                <canvas id="myChart1"></canvas>
+            </div>
+            <div class="mr-chart" style="max-width:400px;">
+                <canvas id="myChart2"></canvas>
+            </div>
+        </div>
+    </div>
+</section>   
 <!-- Past Reviews section -->
 <section class="reviews pt-5">
     <div class="container">

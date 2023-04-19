@@ -1,4 +1,4 @@
-reviews = document.querySelectorAll('.card');
+reviews = document.querySelectorAll('.review-card');
 var i = 1;
 // iterate through each review
 reviews.forEach((review) => {
