@@ -88,16 +88,14 @@ def api_call(link):
     for i in range(len(result[0])):
         ratings.append(result[0][i]['rating'])
     return reviews,ratings,p_name
-
+#main-video-container
 def get_image(url):
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36'}
     response = requests.get(url, headers=headers)
     soup = BeautifulSoup(response.content, 'html.parser')
     if 'amazon' in url:
-        image = soup.find('img', {'data-hook':'cr-product-image'})['src']
+        image = soup.find('img', {'id': 'landingImage'})['data-a-dynamic-image'][0]
         print(image)
-    elif 'flipkart' in url:
-        image = soup.find('img', {'class': '_396cs4 _3exPp9'})['src']
     return image
 
 def clean(text):
@@ -117,15 +115,29 @@ def web_scraper(url):
             except:
                 print('waiting for 10 sec')
                 time.sleep(10)
-        image = get_image(url)
-        rev_len = len(reviews)
+        #flipkart reviews, append review and rating, continue
+        is_available=False
         review = GeneralReviews.objects.filter(product_name=p_name)
         avg_rate = 0
         summary = ''
+        len_review = len(reviews)
+        print(reviews)
         if review.exists():
             avg_rate = review[0].rating
             summary = review[0].summary
-    return avg_rate, p_name, summary,reviews,ratings,rev_len,image
+        else:
+            try:
+                review_text,rating_score,min_len = get_flipkart_reviews(p_name)
+                for i in range(min_len):
+                    reviews.append(review_text[i])
+                    ratings.append(rating_score[i])
+                is_available=True
+            except:
+                print('no flipkart reviews')
+            image = get_image(url)
+            rev_len = len(reviews)
+        
+    return avg_rate,p_name,summary,reviews,ratings,len_review,image,is_available
 
 def get_summary(reviews):
     # text summarization
@@ -151,76 +163,18 @@ def home(request):
             url = request.POST['query']
             if url == '':
                 return render(request, 'base/home.html')
-            avg_rate, p_name, summary, reviews, ratings, rev_len, image = web_scraper(url)
+            avg_rate, p_name, summary, reviews, ratings, rev_len, image, is_available = web_scraper(url)
 
             if avg_rate != 0:
                 review = GeneralReviews.objects.filter(product_name=p_name)
                 avg_rate = review[0].rating
                 summary = review[0].summary
+                check = UserReviews.objects.filter(product_name=p_name, user=request.user)
+                if request.user.is_authenticated and not check.exists():
+                    user = request.user
+                    review_save = UserReviews.objects.create(summary=review[0].summary, rating=review[0].rating, product_name=review[0].product_name,neg=review[0].neg,neu=review[0].neu,pos=review[0].pos,user=user)
+                    review_save.save()
                 return render(request, 'base/home.html', {'avg' : avg_rate, 'iter' : iter, 'p_name' : p_name, 'summary': summary, 'img': image})
-            #return render(request, 'base/home.html', {'avg' : avg_rate, 'iter' : iter, 'p_name' : p_name, 'summary': summary})
-            # elif 'myntra' in url:
-            #     response = requests.get(url, headers=headers)
-            #     soup = BeautifulSoup(response.content, 'html.parser')
-            #     # get the product name from div with class product-details-brand
-            #     try:
-            #         p_name = soup.find('div', {'class': 'product-details-brand'}).get_text()
-            #         p_name += soup.find('div', {'class': 'product-details-name'}).get_text()
-            #         print(p_name)
-            #         review = Review.objects.filter(product_name=p_name)
-            #         if review.exists():
-            #             avg_rate = review[0].rating
-            #             summary = review[0].summary
-            #             return render(request, 'base/home.html', {'avg' : avg_rate, 'iter' : iter, 'p_name' : p_name, 'summary': summary})
-            #     except:
-            #         pass
-            #     # get the review from div with class user-review-reviewTextWrapper
-            #     try:
-            #         reviews_div = soup.find_all('div', {'class': 'user-review-reviewTextWrapper'})
-            #         for d in reviews_div:
-            #             text=d.get_text()
-            #             reviews.append(text)
-            #         print(len(reviews))
-            #         rate_box=soup.find_all('div', {'class': 'index-flexRow index-averageRating'})
-            #         for r in rate_box:
-            #             rate=r.get_text()
-            #             ratings.append(int(rate))
-            #     except:
-            #         pass
-            # else:
-            #     response = requests.get(url)
-            #     soup = BeautifulSoup(response.content, 'html.parser')
-            #     # get the product name from div with class _2s4DIt _1CDdy2
-            #     try:
-            #         p_name = soup.find('div', {'class': '_2s4DIt _1CDdy2'}).get_text()
-            #         # remove the "reviews" from the end of the product name
-            #         p_name = p_name[:-7]
-            #         print(p_name)
-            #         review = Review.objects.filter(product_name=p_name)
-            #         if review.exists():
-            #             avg_rate = review[0].rating
-            #             summary = review[0].summary
-            #             return render(request, 'base/home.html', {'avg' : avg_rate, 'iter' : iter, 'p_name' : p_name, 'summary': summary})
-            #     except:
-            #         pass
-            #     # Find the div that contains the reviews
-            #     try:
-            #         for i in range(1, 7):
-            #             url=url+"&page="+str(i)
-            #             response = requests.get(url)
-            #             soup = BeautifulSoup(response.content, 'html.parser')
-            #             # reviews_div = soup.find_all('div', {'class': '_1AtVbE'})
-            #             # for d in reviews_div:
-            #             reviews_div = soup.find_all('div', {'class': 't-ZTKy'})
-            #             for d in reviews_div:
-            #                 text=d.get_text()
-            #                 reviews.append(text)
-            #             rate_box=soup.find_all('div', {'class': '_3LWZlK _1BLPMq'})
-            #             for r in rate_box:
-            #                 rate=r.get_text()
-            #                 ratings.append(int(rate))
-            #     except:
-            #         pass
             summary = get_summary(reviews)
             res = []
             op = []
@@ -243,8 +197,8 @@ def home(request):
                 avg_pos+=row['roberta_pos']
                 avg_neg+=row['roberta_neg']
                 avg_neu+=row['roberta_neu']
-                star += lr_model.predict([[row['roberta_neg'],row['roberta_neu'],row['roberta_pos']]])[0]
-                rev_rate+=row['Score']
+                star += float(lr_model.predict([[row['roberta_neg'],row['roberta_neu'],row['roberta_pos']]])[0])
+                rev_rate+=float(row['Score'])
             avg_pos/=rev_len
             avg_neg/=rev_len
             avg_neu/=rev_len
@@ -252,8 +206,8 @@ def home(request):
             rev_rate/=rev_len
             avg_rate = (star+rev_rate)/2
             avg_rate = round(avg_rate, 2)
-            print(avg_rate)
-            print(star)
+            print("Avg Rating : ",avg_rate)
+            print("Star Rating : ",star)
             user = None
             if request.user.is_authenticated:
                 user = request.user

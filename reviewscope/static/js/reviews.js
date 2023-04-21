@@ -39,64 +39,52 @@ const ctx1 = document.getElementById('pieChart');
 const ctx2 = document.getElementById('barChart');
 
 const myChart = new Chart(ctx1, {
-    type: 'doughnut',
-    data: {
-        labels: ['Positive', 'Negative', 'Neutral'],
-        datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3],
-            backgroundColor: [
-                'rgba(0, 255, 0, 0.2)',
-                'rgba(255, 0, 0, 0.2)',
-                'rgba(0, 0, 255, 0.2)'
-            ],
-            borderColor: [
-                'rgba(0, 255, 0, 1)',
-                'rgba(255, 0, 0, 1)',
-                'rgba(0, 0, 255, 1)'
-            ],
-            borderWidth: 1
-        }]
+  type: "doughnut",
+  data: {
+    labels: ["Positive", "Negative", "Neutral"],
+    datasets: [
+      {
+        label: "# of Votes",
+        data: [12, 19, 3],
+        backgroundColor: [
+          "rgba(0, 255, 0, 0.2)",
+          "rgba(255, 0, 0, 0.2)",
+          "rgba(0, 0, 255, 0.2)",
+        ],
+            borderColor: ["#3EBD73", "#F35A5A", "#808080 "],
+        borderWidth: 1,
+      },
+    ],
+  },
+  options: {
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
     },
-    options: {
-        scales: {
-            y: {
-                beginAtZero: true
-            }
-        }
-    }
+  },
 });
 
 const myChart2 = new Chart(ctx2, {
-    type: 'bar',
-    data: {
-        labels: ['1 star', '2 star', '3 star', '4 star', '5 star'],
-        datasets: [{
-            label: 'Rating',
-            data: [12, 19, 3, 5, 2],
-            backgroundColor: [
-                'rgba(255, 0, 0, 0.5)',
-                'rgba(255, 0, 0, 0.5)',
-                'rgba(0, 0, 255, 0.5)',
-                'rgba(0, 255, 0, 0.5)',
-                'rgba(0, 255, 0, 0.5)'
-            ],
-            borderColor: [
-                'rgba(255, 0, 0, 1)',
-                'rgba(255, 0, 0, 1)',
-                'rgba(0, 0, 255, 1)',
-                'rgba(0, 255, 0, 1)',
-                'rgba(0, 255, 0, 1)'
-            ],
-            borderWidth: 1
-        }]
+  type: "bar",
+  data: {
+    labels: ["1 star", "2 star", "3 star", "4 star", "5 star"],
+    datasets: [
+      {
+        label: "Rating",
+        data: [12, 19, 3, 5, 2],
+        backgroundColor: ["rgba(0, 255,0, 0.2)"],
+        borderColor: ["#3EBD73"],
+        borderWidth: 1,
+      },
+    ],
+  },
+  options: {
+    indexAxis: "y",
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
     },
-    options: {
-        indexAxis: 'y',
-        scales: {
-            y: {
-                beginAtZero: true
-            }
-        }
-    }
+  },
 });
