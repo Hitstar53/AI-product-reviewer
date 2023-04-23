@@ -2,16 +2,12 @@ from django.shortcuts import render
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
 import pandas as pd
-from transformers import AutoTokenizer, pipeline
+from transformers import AutoTokenizer
 from transformers import AutoModelForSequenceClassification
-from transformers import AutoModelWithLMHead
 from scipy.special import softmax
 from outscraper import ApiClient
 from joblib import load
-import torch
 import warnings
-import numpy as np
-from sklearn.linear_model import LinearRegression
 import cleantext
 import requests
 from bs4 import BeautifulSoup
