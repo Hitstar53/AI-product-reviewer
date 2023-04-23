@@ -27,11 +27,14 @@ SECRET_KEY = 'django-insecure-p7#9@_t!ml1+j3nfu9tl#p@ul+!1fxxb&jn5px8ay&@_s2*r=t
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    '*'
+    '*',
+    'https://ai-product-reviewer-production.up.railway.app',
+    'https://ai-product-reviewer-production.up.railway.app/',
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'localhost:3000',
+    'https://ai-product-reviewer-production.up.railway.app',
+    'https://ai-product-reviewer-production.up.railway.app/',
 ]
 
 
@@ -55,7 +58,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware'
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.common.CommonMiddleware',
     # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
