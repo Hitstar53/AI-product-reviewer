@@ -10,12 +10,14 @@ from outscraper import ApiClient
 from joblib import load
 import torch
 import warnings
+import numpy as np
 from sklearn.linear_model import LinearRegression
 import cleantext
 import requests
 from bs4 import BeautifulSoup
 from .models import UserReviews, GeneralReviews
 import time
+
 #setup model (roberta)
 warnings.filterwarnings("ignore")
 lr_model=load('./savedModels/rating_predictor_updated.joblib')
@@ -76,9 +78,7 @@ def polarity_scores_roberta_list(review):
     scores_list = [scores[0], scores[1], scores[2]]
     return scores_list
 
-#setup model (t5)
-tokenizer2 = AutoTokenizer.from_pretrained('t5-base')
-model2 = AutoModelWithLMHead.from_pretrained('t5-base', return_dict=True)
+#setup model (gpt3)
 
 def api_call(link):
     api_client = ApiClient(api_key='Z29vZ2xlLW9hdXRoMnwxMTU3MTI4ODgzMjY3NDgyNTQ2MzF8YzBlN2I4YTE3NQ')
@@ -92,14 +92,23 @@ def api_call(link):
         ratings.append(result[0][i]['rating'])
     return reviews,ratings,p_name
 
-# def get_image(url):
-#     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36'}
-#     response = requests.get(url, headers=headers)
-#     soup = BeautifulSoup(response.content, 'html.parser')
-#     if 'amazon' in url:
-#         image = soup.find('img', {'id': 'landingImage'})['data-a-dynamic-image'][0]
-#         print(image)
-#     return image
+def get_asin(url):
+    if 'amazon' in url:
+        asin = url.split('product-reviews/')[1].split('/')[0]
+        print(asin)
+    return asin
+
+def get_image(url):
+    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36'}
+    asin=get_asin(url)
+    ind=url.index('product-reviews')
+    url=url[:ind]+'dp/'+asin+'/ref=cm_cr_arp_d_product_top?ie=UTF8'
+    print(url)
+    response = requests.get(url, headers=headers)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    image = soup.find('img', {'id': 'landingImage'})['src']
+    print(image)
+    return image
 
 def clean(text):
     text = cleantext.clean(text, to_ascii=True, lower=True, no_line_breaks=True, no_urls=True, no_emails=True,no_emoji=True, no_phone_numbers=True, no_numbers=False, no_digits=False, no_currency_symbols=True, no_punct=False, replace_with_url="", replace_with_email="", replace_with_phone_number="", replace_with_number="", replace_with_digit="0", replace_with_currency_symbol="")
@@ -110,7 +119,7 @@ def web_scraper(url):
     ratings=[]
     p_name = ''
     image = ''
-
+    created = ''
     if 'amazon' in url:
         while True:
             try:
@@ -129,6 +138,8 @@ def web_scraper(url):
         if review.exists():
             avg_rate = review[0].rating
             summary = review[0].summary
+            image = review[0].img
+            created = review[0].created
         else:
             try:
                 review_text,rating_score,min_len = get_flipkart_reviews(p_name)
@@ -138,20 +149,24 @@ def web_scraper(url):
                 is_available=True
             except:
                 print('no flipkart reviews')
-            # image = get_image(url)
+            image = get_image(url)
             rev_len = len(reviews)
-    return avg_rate,p_name,summary,reviews,ratings,len_review,image,is_available
+    return avg_rate,p_name,summary,reviews,ratings,len_review,image,created,is_available
 
 def get_summary(reviews):
     # text summarization
     merged_reviews = ''
     for i in range(len(reviews)):
         merged_reviews += reviews[i]
-    inputs = tokenizer2.encode("summarize: " + merged_reviews, return_tensors="pt", max_length=512, truncation=True)
-    outputs = model2.generate(inputs, max_length=150, min_length=40, length_penalty=2.0, num_beams=4, early_stopping=True)
-    summary = tokenizer2.decode(outputs[0])
-    summary = summary.replace('<pad>', '')
-    summary = summary.replace('</s>', '')
+    url = "https://article-extractor-and-summarizer.p.rapidapi.com/summarize-text"
+    payload = { "text": merged_reviews}
+    headers = {
+	    "content-type": "application/json",
+	    "X-RapidAPI-Key": "c5f70b06ddmsh1f4a649c3843cabp1204ccjsn3025fdfa0cc3",
+	    "X-RapidAPI-Host": "article-extractor-and-summarizer.p.rapidapi.com"
+    }
+    response = requests.post(url, json=payload, headers=headers)
+    summary = response.json()['summary']
     return summary
 
 # Create your views here.
@@ -161,13 +176,14 @@ def home(request):
             ratings=[]
             p_name = ''
             image = ''
+            created = ''
             rating_count = [0,0,0,0,0]
             rev_len=1
             iter = [1,2,3,4,5]
             url = request.POST['query']
             if url == '':
                 return render(request, 'base/home.html')
-            avg_rate, p_name, summary, reviews, ratings, rev_len, image, is_available = web_scraper(url)
+            avg_rate, p_name, summary, reviews, ratings, rev_len, image, created, is_available = web_scraper(url)
 
             if avg_rate != 0:
                 review = GeneralReviews.objects.filter(product_name=p_name)
@@ -177,12 +193,12 @@ def home(request):
                 if request.user.is_authenticated:
                     check = UserReviews.objects.filter(product_name=p_name, user=request.user)
                 else:
-                    return render(request, 'base/home.html', {'avg' : avg_rate, 'iter' : iter, 'p_name' : p_name, 'summary': summary, 'img': image})
+                    return render(request, 'base/home.html', {'avg' : avg_rate, 'iter' : iter, 'p_name' : p_name, 'summary': summary, 'img': image, 'created': created})
                 if request.user.is_authenticated and not check.exists():
                     user = request.user
-                    review_save = UserReviews.objects.create(summary=review[0].summary, rating=review[0].rating, product_name=review[0].product_name,neg=review[0].neg,neu=review[0].neu,pos=review[0].pos,user=user,flipkart=is_available)
+                    review_save = UserReviews.objects.create(summary=review[0].summary, rating=review[0].rating, product_name=review[0].product_name,neg=review[0].neg,neu=review[0].neu,pos=review[0].pos,user=user,flipkart=is_available,img=image)
                     review_save.save()
-                return render(request, 'base/home.html', {'avg' : avg_rate, 'iter' : iter, 'p_name' : p_name, 'summary': summary, 'img': image})
+                return render(request, 'base/home.html', {'avg' : avg_rate, 'iter' : iter, 'p_name' : p_name, 'summary': summary, 'img': image, 'created': created})
             summary = get_summary(reviews)
             res = []
             op = []
@@ -223,14 +239,14 @@ def home(request):
             user = None
             if request.user.is_authenticated:
                 user = request.user
-                review = UserReviews.objects.create(summary=summary, rating=avg_rate, product_name=p_name,neg=avg_neg,neu=avg_neu,pos=avg_pos,user=user,flipkart=is_available)
+                review = UserReviews.objects.create(summary=summary, rating=avg_rate, product_name=p_name,neg=avg_neg,neu=avg_neu,pos=avg_pos,user=user,flipkart=is_available,img=image)
                 review.save()
-                review2 = GeneralReviews.objects.create(summary=summary, rating=avg_rate, product_name=p_name,neg=avg_neg,neu=avg_neu,pos=avg_pos,flipkart=is_available,sc_1=rating_count[0],sc_2=rating_count[1],sc_3=rating_count[2],sc_4=rating_count[3],sc_5=rating_count[4])
+                review2 = GeneralReviews.objects.create(summary=summary, rating=avg_rate, product_name=p_name,neg=avg_neg,neu=avg_neu,pos=avg_pos,flipkart=is_available,sc_1=rating_count[0],sc_2=rating_count[1],sc_3=rating_count[2],sc_4=rating_count[3],sc_5=rating_count[4],img=image)
                 review2.save()
             else:
-                review = GeneralReviews.objects.create(summary=summary, rating=avg_rate, product_name=p_name,neg=avg_neg,neu=avg_neu,pos=avg_pos,flipkart=is_available,sc_1=rating_count[0],sc_2=rating_count[1],sc_3=rating_count[2],sc_4=rating_count[3],sc_5=rating_count[4])
+                review = GeneralReviews.objects.create(summary=summary, rating=avg_rate, product_name=p_name,neg=avg_neg,neu=avg_neu,pos=avg_pos,flipkart=is_available,sc_1=rating_count[0],sc_2=rating_count[1],sc_3=rating_count[2],sc_4=rating_count[3],sc_5=rating_count[4],img=image)
                 review.save()
-            return render(request, 'base/home.html', {'avg' : avg_rate, 'iter' : iter, 'star' : star, 'rev' : rev_rate, 'p_name' : p_name, 'summary': summary, 'img': image,'rating_data':rating_count,'avg_pos':avg_pos,'avg_neg':avg_neg,'avg_neu':avg_neu})
+            return render(request, 'base/home.html', {'avg' : avg_rate, 'iter' : iter, 'star' : star, 'rev' : rev_rate, 'p_name' : p_name, 'summary': summary, 'img': image,'rating_data':rating_count,'avg_pos':avg_pos,'avg_neg':avg_neg,'avg_neu':avg_neu, 'created': created})
     return render(request, 'base/home.html')
 
 def payment(request,plan):
