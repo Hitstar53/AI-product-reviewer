@@ -28,6 +28,7 @@
 </section>
 
 <!--Stats Card-->
+{% if check %}
 <section class="stats-card py-5">
     <div class="container">
         <div class="heading">
@@ -35,7 +36,7 @@
         </div>
         <div class="mr-card p-5">
             <div class="mr-content">
-                <h2 class="mr-title fw-bold">Product Name</h2>
+                <h2 class="mr-title fw-bold">{{ highlighted.product_name }}</h2>
                 <p class="mr-rating">
                     <div class="stars">
                         <ul>
@@ -46,13 +47,13 @@
                             <li><i class="fa-solid fa-star"></i></li>
                             <li><i class="fa-regular fa-star"></i></li>
                             <li class="model-rating fw-bold">
-                                4.0 / 5
+                                {{ highlighted.rating }} / 5
                             </li>
                         </ul>
                     </div>
                 </p>
                 <p class="mr-summary">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iure nihil voluptatum qui nemo, nisi esse inventore nostrum eveniet reprehenderit voluptas, enim eaque nesciunt rerum doloribus cumque optio corporis rem et deserunt soluta recusandae ipsum! Vitae nobis, ex doloribus ducimus nostrum distinctio? Similique iusto dolores architecto. Voluptatem optio facilis vel magnam!
+                    {{ highlighted.summary }}
                 </p>
             </div>  
             <div class="mr-image">
@@ -66,9 +67,10 @@
             </div>
         </div>
     </div>
-</section>   
+</section>
+{% endif %}
 <!-- Past Reviews section -->
-<section class="reviews pt-5">
+<section class="reviews py-5">
     <div class="container">
         <div class="heading">
             <h1 class="fw-bold">Past Reviews</h1>
@@ -98,7 +100,7 @@
                     {{ review.summary }}
                 </p>
                 <p class="read-more">
-                    <a class="readMore" href="#">Read More <i class="fas fa-arrow-right"></i></a>
+                    <a class="readMore" href="{% url 'reviews' pname=review.product_name %}">Read More <i class="fas fa-arrow-right"></i></a>
                 </p>
             </div>
         {% endif %}
@@ -110,5 +112,80 @@
 
 {% block scripts %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    var pos = "{{ highlighted.pos }}";
+    var neg = "{{ highlighted.neg }}";
+    var neu = "{{ highlighted.neu }}";
+    //convert string to float
+    pos = parseFloat(pos)*100;
+    neg = parseFloat(neg)*100;
+    neu = parseFloat(neu)*100;
+
+    star1 = "{{ highlighted.sc_1 }}";
+    star2 = "{{ highlighted.sc_2 }}";
+    star3 = "{{ highlighted.sc_3 }}";
+    star4 = "{{ highlighted.sc_4 }}";
+    star5 = "{{ highlighted.sc_5 }}";
+
+    star1 = parseInt(star1);
+    star2 = parseInt(star2);
+    star3 = parseInt(star3);
+    star4 = parseInt(star4);
+    star5 = parseInt(star5);
+
+    const ctx1 = document.getElementById('pieChart');
+    const ctx2 = document.getElementById('barChart');
+
+    const myChart = new Chart(ctx1, {
+        type: "doughnut",
+        data: {
+            labels: ["Positive", "Negative", "Neutral"],
+            datasets: [
+            {
+                label: "Sentiment",
+                data: [pos, neg, neu],
+                backgroundColor: [
+                "rgba(0, 255, 0, 0.2)",
+                "rgba(255, 0, 0, 0.2)",
+                "rgba(0, 0, 255, 0.2)",
+                ],
+                    borderColor: ["#3EBD73", "#F35A5A", "#808080 "],
+                borderWidth: 1,
+            },
+            ],
+        },
+        options: {
+            scales: {
+            y: {
+                beginAtZero: true,
+            },
+            },
+        },
+    });
+
+    const myChart2 = new Chart(ctx2, {
+        type: "bar",
+        data: {
+            labels: ["1 star", "2 star", "3 star", "4 star", "5 star"],
+            datasets: [
+            {
+                label: "Rating",
+                data: [star1,star2,star3,star4,star5],
+                backgroundColor: ["rgba(0, 255,0, 0.2)"],
+                borderColor: ["#3EBD73"],
+                borderWidth: 1,
+            },
+            ],
+        },
+        options: {
+            indexAxis: "y",
+            scales: {
+            y: {
+                beginAtZero: true,
+            },
+            },
+        },
+    });
+</script>
 <script src="{% static 'js/reviews.js' %}"></script>
 {% endblock scripts %}

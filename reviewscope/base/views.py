@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.core.mail import send_mail
+from django.contrib.auth.decorators import login_required
 import pandas as pd
 from transformers import AutoTokenizer, pipeline
 from transformers import AutoModelForSequenceClassification
@@ -48,7 +49,7 @@ def get_flipkart_reviews(product_name):
     review_text=[]
     rating_score=[]
     # Find the div that contains the reviews
-    for i in range(1, 10):
+    for i in range(1, 2):
         url=url+"&page="+str(i)
         response = requests.get(url)
         soup = BeautifulSoup(response.content, 'html.parser')
@@ -66,6 +67,8 @@ def get_flipkart_reviews(product_name):
     return review_text,rating_score,min_len
 
 def polarity_scores_roberta_list(review):
+    print(review)
+    print()
     encoded_text = tokenizer1(review, return_tensors='pt')
     output = model1(**encoded_text)
     scores = output[0][0].detach().numpy()
@@ -88,15 +91,15 @@ def api_call(link):
     for i in range(len(result[0])):
         ratings.append(result[0][i]['rating'])
     return reviews,ratings,p_name
-#main-video-container
-def get_image(url):
-    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36'}
-    response = requests.get(url, headers=headers)
-    soup = BeautifulSoup(response.content, 'html.parser')
-    if 'amazon' in url:
-        image = soup.find('img', {'id': 'landingImage'})['data-a-dynamic-image'][0]
-        print(image)
-    return image
+
+# def get_image(url):
+#     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36'}
+#     response = requests.get(url, headers=headers)
+#     soup = BeautifulSoup(response.content, 'html.parser')
+#     if 'amazon' in url:
+#         image = soup.find('img', {'id': 'landingImage'})['data-a-dynamic-image'][0]
+#         print(image)
+#     return image
 
 def clean(text):
     text = cleantext.clean(text, to_ascii=True, lower=True, no_line_breaks=True, no_urls=True, no_emails=True,no_emoji=True, no_phone_numbers=True, no_numbers=False, no_digits=False, no_currency_symbols=True, no_punct=False, replace_with_url="", replace_with_email="", replace_with_phone_number="", replace_with_number="", replace_with_digit="0", replace_with_currency_symbol="")
@@ -106,7 +109,8 @@ def web_scraper(url):
     reviews = []
     ratings=[]
     p_name = ''
-    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36'}
+    image = ''
+
     if 'amazon' in url:
         while True:
             try:
@@ -121,7 +125,7 @@ def web_scraper(url):
         avg_rate = 0
         summary = ''
         len_review = len(reviews)
-        print(reviews)
+        # print(reviews)
         if review.exists():
             avg_rate = review[0].rating
             summary = review[0].summary
@@ -134,9 +138,8 @@ def web_scraper(url):
                 is_available=True
             except:
                 print('no flipkart reviews')
-            image = get_image(url)
+            # image = get_image(url)
             rev_len = len(reviews)
-        
     return avg_rate,p_name,summary,reviews,ratings,len_review,image,is_available
 
 def get_summary(reviews):
@@ -158,6 +161,7 @@ def home(request):
             ratings=[]
             p_name = ''
             image = ''
+            rating_count = [0,0,0,0,0]
             rev_len=1
             iter = [1,2,3,4,5]
             url = request.POST['query']
@@ -169,10 +173,14 @@ def home(request):
                 review = GeneralReviews.objects.filter(product_name=p_name)
                 avg_rate = review[0].rating
                 summary = review[0].summary
-                check = UserReviews.objects.filter(product_name=p_name, user=request.user)
+                check=None
+                if request.user.is_authenticated:
+                    check = UserReviews.objects.filter(product_name=p_name, user=request.user)
+                else:
+                    return render(request, 'base/home.html', {'avg' : avg_rate, 'iter' : iter, 'p_name' : p_name, 'summary': summary, 'img': image})
                 if request.user.is_authenticated and not check.exists():
                     user = request.user
-                    review_save = UserReviews.objects.create(summary=review[0].summary, rating=review[0].rating, product_name=review[0].product_name,neg=review[0].neg,neu=review[0].neu,pos=review[0].pos,user=user)
+                    review_save = UserReviews.objects.create(summary=review[0].summary, rating=review[0].rating, product_name=review[0].product_name,neg=review[0].neg,neu=review[0].neu,pos=review[0].pos,user=user,flipkart=is_available)
                     review_save.save()
                 return render(request, 'base/home.html', {'avg' : avg_rate, 'iter' : iter, 'p_name' : p_name, 'summary': summary, 'img': image})
             summary = get_summary(reviews)
@@ -186,6 +194,7 @@ def home(request):
                     res.append([i]+polarity_scores_roberta_list(reviews[i])+[ratings[i]])
             except:
                 pass
+
             df_results = pd.DataFrame(res, columns=columns)
             rev_rate=0
             star = 0
@@ -198,7 +207,10 @@ def home(request):
                 avg_neg+=row['roberta_neg']
                 avg_neu+=row['roberta_neu']
                 star += float(lr_model.predict([[row['roberta_neg'],row['roberta_neu'],row['roberta_pos']]])[0])
-                rev_rate+=float(row['Score'])
+                current_rating=float(row['Score'])
+                print(current_rating)
+                rev_rate+=current_rating
+                rating_count[int(current_rating)-1]+=1
             avg_pos/=rev_len
             avg_neg/=rev_len
             avg_neu/=rev_len
@@ -211,14 +223,14 @@ def home(request):
             user = None
             if request.user.is_authenticated:
                 user = request.user
-                review = UserReviews.objects.create(summary=summary, rating=avg_rate, product_name=p_name,neg=avg_neg,neu=avg_neu,pos=avg_pos,user=user)
+                review = UserReviews.objects.create(summary=summary, rating=avg_rate, product_name=p_name,neg=avg_neg,neu=avg_neu,pos=avg_pos,user=user,flipkart=is_available)
                 review.save()
-                review2 = GeneralReviews.objects.create(summary=summary, rating=avg_rate, product_name=p_name,neg=avg_neg,neu=avg_neu,pos=avg_pos)
+                review2 = GeneralReviews.objects.create(summary=summary, rating=avg_rate, product_name=p_name,neg=avg_neg,neu=avg_neu,pos=avg_pos,flipkart=is_available,sc_1=rating_count[0],sc_2=rating_count[1],sc_3=rating_count[2],sc_4=rating_count[3],sc_5=rating_count[4])
                 review2.save()
             else:
-                review = GeneralReviews.objects.create(summary=summary, rating=avg_rate, product_name=p_name,neg=avg_neg,neu=avg_neu,pos=avg_pos)
+                review = GeneralReviews.objects.create(summary=summary, rating=avg_rate, product_name=p_name,neg=avg_neg,neu=avg_neu,pos=avg_pos,flipkart=is_available,sc_1=rating_count[0],sc_2=rating_count[1],sc_3=rating_count[2],sc_4=rating_count[3],sc_5=rating_count[4])
                 review.save()
-            return render(request, 'base/home.html', {'avg' : avg_rate, 'iter' : iter, 'star' : star, 'rev' : rev_rate, 'p_name' : p_name, 'summary': summary, 'img': image})
+            return render(request, 'base/home.html', {'avg' : avg_rate, 'iter' : iter, 'star' : star, 'rev' : rev_rate, 'p_name' : p_name, 'summary': summary, 'img': image,'rating_data':rating_count,'avg_pos':avg_pos,'avg_neg':avg_neg,'avg_neu':avg_neu})
     return render(request, 'base/home.html')
 
 def payment(request,plan):
@@ -255,28 +267,14 @@ def contact(request):
         return render(request, 'base/contact.html')
     return render(request, 'base/contact.html')
 
-def reviews(request):
+@login_required
+def reviews(request, pname):
     iter = [1,2,3,4,5]
-    return render(request, 'base/reviews.html', {'reviews': UserReviews.objects.all(), 'iter': iter})
+    highlighted=GeneralReviews.objects.filter(product_name=pname)
+    highlighted=highlighted[0]
+    return render(request, 'base/reviews.html', {'reviews': UserReviews.objects.all(), 'iter': iter, 'highlighted':highlighted,'check':True})
 
-def search(request):
-    if request.method == 'POST':
-        text = request.POST['query']
-        reviews,ratings = api_call(text)
-        rev_len = len(reviews)
-        res = []
-        op = []
-        columns = ['Id', 'roberta_neg', 'roberta_neu', 'roberta_pos','Score']
-        for i in range(rev_len):
-            res.append([i]+polarity_scores_roberta_list(reviews[i])+[ratings[i]])
-        df_results = pd.DataFrame(res, columns=columns)
-        rev_rate=0
-        star = 0
-        print(rev_len)
-        for index, row in df_results.iterrows():
-            star += lr_model.predict([[row['roberta_neg'],row['roberta_neu'],row['roberta_pos']]])
-            rev_rate+=row['Score']
-        star/=rev_len
-        rev_rate/=rev_len
-        return render(request, 'base/search.html', {'star': star[0], 'rev' : rev_rate})
-    return render(request, 'base/search.html')
+@login_required
+def history(request):
+    iter = [1,2,3,4,5]
+    return render(request, 'base/reviews.html', {'reviews': UserReviews.objects.all(), 'iter': iter,'check':False})

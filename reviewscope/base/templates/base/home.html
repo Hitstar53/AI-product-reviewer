@@ -52,7 +52,7 @@
         <div class="mr-card card mx-auto mb-3" data-aos="zoom-in" style="max-width:90%;">
             <div class="row g-0">
                 <div class="col-md-4">
-                    <img src="{{ img }}" class="img-fluid rounded-start card-img" alt="...">
+                    <img src="{% static 'assets/ai-review.webp' %}" class="img-fluid rounded-start card-img" alt="...">
                 </div>
                 <div class="col-md-8">
                     <div class="card-body">
@@ -78,7 +78,7 @@
                             {{ summary }}
                         </p>
                         {% if user.is_authenticated %}
-                        <a id="mr-btn" class="btn btn-primary" href="{% url 'reviews' %}" role="button">
+                        <a id="mr-btn" class="btn btn-primary" href="{% url 'reviews' pname=p_name  %}" role="button">
                             Read More <i class="fas fa-arrow-right"></i>
                         </a>
                         {% else %}
@@ -121,10 +121,10 @@
                 </h2>
                 <div id="question-one" class="accordion-collapse collapse" data-bs-parent="#questions">
                     <div class="accordion-body">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore, eveniet maxime dicta eius iste aperiam
-                        beatae quasi numquam molestias est ex at possimus. Expedita eos aperiam, voluptas consectetur magni
-                        nihil sit nemo quibusdam officia quo odio dolor laboriosam molestias amet assumenda dolores.
-                        Consequuntur magnam odit explicabo vel sint praesentium dicta!
+                        At ReviewScope, we make it easy for you to access product reviews and make informed decisions
+                        before making a purchase. Simply search for products using our search bar and access reviews from various sources.
+                        Our detailed reviews provide insights into product performance, quality, and satisfaction levels, along with
+                        ratings and feedback from other users.
                     </div>
                 </div>
             </div>
@@ -138,9 +138,12 @@
                 </h2>
                 <div id="question-two" class="accordion-collapse collapse" data-bs-parent="#questions">
                     <div class="accordion-body">
-                        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Pariatur animi accusantium non. Animi minus,
-                        fuga, debitis delectus in explicabo beatae dolorem earum, nihil asperiores eligendi maiores nisi porro
-                        modi excepturi.
+                        At ReviewScope, we strive for reliability and accuracy. Our advanced algorithms and machine learning analyze
+                        multiple sources of reviews to extract key information. While we prioritize data accuracy, it's important to
+                        consider that online reviews can vary in reliability. We recommend using our reviews as a valuable source of
+                        information but also conducting your research from multiple sources for a well-rounded understanding.
+                        We continuously improve our algorithms and update our database to maintain accuracy and provide trustworthy
+                        insights for your decision-making process.
                     </div>
                 </div>
             </div>
@@ -154,10 +157,12 @@
                 </h2>
                 <div id="question-three" class="accordion-collapse collapse" data-bs-parent="#questions">
                     <div class="accordion-body">
-                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Eveniet fuga corporis beatae nisi autem quidem
-                        blanditiis dolorum voluptatum qui accusantium, assumenda hic veritatis quas consectetur quam, corrupti
-                        velit. Iste labore voluptatum ipsa quas officia dolorum sunt? Maxime, sapiente aliquid asperiores
-                        exercitationem, ipsa animi voluptatibus, minus iste quas ad delectus autem.
+                        ReviewScope offers streamlined decision-making with a comprehensive view of customer sentiment.
+                        Our website extracts and summarizes online reviews, presenting rating scores, pros, cons, and overall sentiment
+                        in an intuitive format. This benefits consumers, businesses, and researchers by providing reliable
+                        insights to inform decision-making. Additionally, our platform saves time by bringing all the reviews
+                        of a product to one place, eliminating the need to search multiple websites. With ReviewScope, users can make
+                        informed decisions and choose products or services that align with their needs and preferences.
                     </div>
                 </div>
             </div>
@@ -171,9 +176,7 @@
                 </h2>
                 <div id="question-four" class="accordion-collapse collapse" data-bs-parent="#questions">
                     <div class="accordion-body">
-                        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nemo officiis voluptatem obcaecati
-                        consequuntur ducimus voluptatibus blanditiis quod aut unde soluta, similique aspernatur beatae dolore
-                        necessitatibus deleniti fugiat in ea repudiandae?
+                        We have a 3 plans , Soldier,Commander and Prince you can find more info down below!
                     </div>
                 </div>
             </div>
