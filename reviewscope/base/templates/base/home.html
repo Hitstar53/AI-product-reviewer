@@ -24,7 +24,7 @@
                     Our product provides a comprehensive view of customer sentiment, benefiting consumers and businesses.
                 </p>
                 <p class="lead">
-                    Try it out below!
+                    Try it out below by entering an Amazon product URL
                 </p>
                 <!-- search bar -->
                 <form class="d-flex mt-3" method="POST">
@@ -52,7 +52,7 @@
         <div class="mr-card card mx-auto mb-3" data-aos="zoom-in" style="max-width:90%;">
             <div class="row g-0">
                 <div class="col-md-4">
-                    <img src="{% static 'assets/ai-review.webp' %}" class="img-fluid rounded-start card-img" alt="...">
+                    <img src="{{ img }}" class="img-fluid rounded-start card-img" alt="...">
                 </div>
                 <div class="col-md-8">
                     <div class="card-body">
@@ -86,7 +86,11 @@
                             Read More <i class="fas fa-arrow-right"></i>
                         </a>
                         {% endif %}
-                        <p class="card-text mt-3"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                        <p class="card-text mt-3">
+                            <small class="text-body-secondary">
+                                Last updated {{ created }}}
+                            </small>
+                        </p>
                     </div>
                 </div>
             </div>
