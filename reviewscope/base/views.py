@@ -14,26 +14,23 @@ from bs4 import BeautifulSoup
 from .models import UserReviews, GeneralReviews
 import time
 
-#setup model (roberta)
+#setup model (rating predictior)
 warnings.filterwarnings("ignore")
 lr_model=load('./savedModels/rating_predictor_updated.joblib')
 
-MODEL1 = f"cardiffnlp/twitter-roberta-base-sentiment"
-tokenizer1 = AutoTokenizer.from_pretrained(MODEL1)
-model1 = AutoModelForSequenceClassification.from_pretrained(MODEL1)
+# MODEL1 = f"cardiffnlp/twitter-roberta-base-sentiment"
+# tokenizer1 = AutoTokenizer.from_pretrained(MODEL1)
+# model1 = AutoModelForSequenceClassification.from_pretrained(MODEL1)
 
 def get_flipkart_reviews(product_name):
     # replace spaces with plus sign for URL
     search_query = product_name.replace(' ', '+')
     url = f'https://www.flipkart.com/search?q={search_query}&otracker=search&otracker1=search&marketplace=FLIPKART&as-show=on&sort=relevance'
-
     # request Flipkart search page
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
-
     # get product link from search results
     product_link = soup.find('a', {'class': '_1fQZEK'})['href']
-
     # request product page
     url = f'https://www.flipkart.com{product_link}'
     response = requests.get(url)
@@ -64,14 +61,22 @@ def get_flipkart_reviews(product_name):
     rating_score=rating_score[:min_len]
     return review_text,rating_score,min_len
 
+# def polarity_scores_roberta_list(review):
+#     print(review)
+#     print()
+#     encoded_text = tokenizer1(review, return_tensors='pt')
+#     output = model1(**encoded_text)
+#     scores = output[0][0].detach().numpy()
+#     scores = softmax(scores)
+#     scores_list = [scores[0], scores[1], scores[2]]
+#     return scores_list
+
 def polarity_scores_roberta_list(review):
-    print(review)
-    print()
-    encoded_text = tokenizer1(review, return_tensors='pt')
-    output = model1(**encoded_text)
-    scores = output[0][0].detach().numpy()
-    scores = softmax(scores)
-    scores_list = [scores[0], scores[1], scores[2]]
+    API_URL = "https://api-inference.huggingface.co/models/cardiffnlp/twitter-roberta-base-sentiment"
+    headers = {"Authorization": "Bearer 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"}
+    response = requests.post(API_URL, headers=headers, json={"inputs": review})
+    scores = response.json()[0]
+    scores_list = [item['score'] for item in scores]
     return scores_list
 
 #setup model (gpt3)
@@ -162,7 +167,10 @@ def get_summary(reviews):
 	    "X-RapidAPI-Host": "article-extractor-and-summarizer.p.rapidapi.com"
     }
     response = requests.post(url, json=payload, headers=headers)
-    summary = response.json()['summary']
+    try:
+        summary = response.json()['summary']
+    except:
+        summary = ''
     return summary
 
 # Create your views here.
