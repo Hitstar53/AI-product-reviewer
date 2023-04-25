@@ -22,7 +22,7 @@ searchForm.addEventListener('submit', function (event) {
     console.log('Input value:', inputValue);
     var inputUrl = inputValue;
     // Send an HTTP POST request to your Django REST API endpoint
-    fetch('http://127.0.0.1:8000/api/review/', {
+    fetch('https://ai-product-reviewer-production.up.railway.app/api/review/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -56,7 +56,6 @@ searchForm.addEventListener('submit', function (event) {
     .catch(error => {
         console.error('Error sending URL to Django API:', error);
     });
-    
 });
 
 let toggle = true;
