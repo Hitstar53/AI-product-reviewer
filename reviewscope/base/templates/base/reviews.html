@@ -41,11 +41,18 @@
                     <div class="stars">
                         <ul>
                             <li class="rating">Rating: </li>
+                            <!-- <li><i class="fa-solid fa-star"></i></li>
                             <li><i class="fa-solid fa-star"></i></li>
                             <li><i class="fa-solid fa-star"></i></li>
                             <li><i class="fa-solid fa-star"></i></li>
-                            <li><i class="fa-solid fa-star"></i></li>
-                            <li><i class="fa-regular fa-star"></i></li>
+                            <li><i class="fa-regular fa-star"></i></li> -->
+                            {% for i in iter %}
+                                {% if i <= highlighted.rating %}
+                                <li><i class="fa-solid fa-star"></i></li>
+                                {% else %}
+                                <li><i class="fa-regular fa-star"></i></li>
+                                {% endif %}
+                            {% endfor %}
                             <li class="model-rating fw-bold">
                                 {{ highlighted.rating }} / 5
                             </li>
