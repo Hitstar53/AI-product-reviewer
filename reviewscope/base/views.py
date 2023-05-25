@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
 import pandas as pd
@@ -131,9 +131,9 @@ def web_scraper(url):
                 if counter==3:
                     print("Server Error, Please try again later")
                     return redirect('home')
-                print('waiting for 10 sec')
+                print('waiting for 15 sec')
                 counter+=1
-                time.sleep(10)
+                time.sleep(15)
         #flipkart reviews, append review and rating, continue
         is_available=False
         review = GeneralReviews.objects.filter(product_name=p_name)
