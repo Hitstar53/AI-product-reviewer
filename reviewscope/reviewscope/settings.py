@@ -30,11 +30,15 @@ ALLOWED_HOSTS = [
     '*',
     'https://ai-product-reviewer-production.up.railway.app',
     'https://ai-product-reviewer-production.up.railway.app/',
+    'https://ai-product-reviewer-production-b2b1.up.railway.app/',
+    'https://ai-product-reviewer-production-b2b1.up.railway.app',
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     'https://ai-product-reviewer-production.up.railway.app',
     'https://ai-product-reviewer-production.up.railway.app/',
+    'https://ai-product-reviewer-production-b2b1.up.railway.app/',
+    'https://ai-product-reviewer-production-b2b1.up.railway.app',
 ]
 
 
