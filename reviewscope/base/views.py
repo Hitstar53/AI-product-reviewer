@@ -121,7 +121,7 @@ def web_scraper(url):
     p_name = ''
     image = ''
     created = ''
-	if 'amazon' in url:
+    if 'amazon' in url:
         counter=0
         while True:
             try:
