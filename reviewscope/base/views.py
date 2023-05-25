@@ -121,13 +121,18 @@ def web_scraper(url):
     p_name = ''
     image = ''
     created = ''
-    if 'amazon' in url:
+	if 'amazon' in url:
+        counter=0
         while True:
             try:
                 reviews,ratings,p_name = api_call(url)
                 break
             except:
+                if counter==3:
+                    print("Server Error, Please try again later")
+                    return redirect('home')
                 print('waiting for 10 sec')
+                counter+=1
                 time.sleep(10)
         #flipkart reviews, append review and rating, continue
         is_available=False
