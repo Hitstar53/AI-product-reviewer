@@ -80,18 +80,64 @@ def polarity_scores_roberta_list(review):
     return scores_list
 
 #setup model (gpt3)
+HEADERS = ({'User-Agent':
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) \
+            AppleWebKit/537.36 (KHTML, like Gecko) \
+            Chrome/90.0.4430.212 Safari/537.36',
+            'Accept-Language': 'en-US, en;q=0.5'})
+# user define function
+# Scrape the data
+def getdata(url):
+    r = requests.get(url, headers=HEADERS)
+    return r.text
 
+def html_code(url):
+    # pass the url
+    # into getdata function
+    htmldata = getdata(url)
+    soup = BeautifulSoup(htmldata, 'html.parser')
+
+    # display html code
+    return (soup)
 def api_call(link):
-    api_client = ApiClient(api_key='Z29vZ2xlLW9hdXRoMnwxMTU3MTI4ODgzMjY3NDgyNTQ2MzF8YzBlN2I4YTE3NQ')
-    result = api_client.amazon_reviews(link, limit=10)
-    reviews = []
-    ratings = []
-    p_name = result[0][1]['product_name']
-    for i in range(len(result[0])):
-        reviews.append(result[0][i]['body'])
-    for i in range(len(result[0])):
-        ratings.append(result[0][i]['rating'])
-    return reviews,ratings,p_name
+    # api_client = ApiClient(api_key='Z29vZ2xlLW9hdXRoMnwxMTU3MTI4ODgzMjY3NDgyNTQ2MzF8YzBlN2I4YTE3NQ')
+    # result = api_client.amazon_reviews(link, limit=10)
+    # reviews = []
+    # ratings = []
+    # p_name = result[0][1]['product_name']
+    # for i in range(len(result[0])):
+    #     reviews.append(result[0][i]['body'])
+    # for i in range(len(result[0])):
+    #     ratings.append(result[0][i]['rating'])
+    # return reviews,ratings,p_name
+    soup = html_code(link)
+    reviews=[]
+    ratings=[]
+    product_name = soup.find("h1", class_="a-size-large").get_text()
+    for item in soup.find_all("div", class_="a-row a-spacing-small review-data"):
+        d=item.get_text()
+        if d=="":
+            reviews.append(" ")
+        else:
+            #remove \n from the string
+            d=d.replace("\n","")
+            #limit size of string to 400 characters
+            d=d[:400]
+            reviews.append(d)
+    for item in soup.find_all("span", class_="a-icon-alt"):
+        d=item.get_text()
+        if "1.0 out of" in d:
+            ratings.append(1)
+        elif "2.0 out of" in d:
+            ratings.append(2)
+        elif "3.0 out of" in d:
+            ratings.append(3)
+        elif "4.0 out of" in d:
+            ratings.append(4)
+        elif "5.0 out of" in d:
+            ratings.append(5)
+
+    return reviews,ratings,product_name
 
 def get_asin(url):
     if 'amazon' in url:
