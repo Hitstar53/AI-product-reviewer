@@ -28,7 +28,7 @@ numpy==1.24.2
 outscraper==3.0.3
 packaging==23.0
 pandas==1.5.3
-Pillow==10.0.1
+Pillow==10.2.0
 pycparser==2.21
 python-dateutil==2.8.2
 pytz==2023.3
